@@ -4,9 +4,11 @@ from returns.result import Success, Result, Failure
 from ads_api.base import Base, CamelCaseBaseModel
 from enum import Enum
 
+__all__ = ["AccountApi"]
+
 
 class AccountApi(Base):
-    async def list(
+    async def query(
         self, max_results: int = 100, next_token: Optional[str] = None
     ) -> Result["ListReponse", Exception]:
         body: dict[str, Any] = {"maxResults": max_results}

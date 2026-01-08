@@ -9,5 +9,5 @@ async def test_profile(credentials: Credentials):
     ads_client = create_ads_client(enums.Region.EU, credentials)
     profile_api = ProfileApi(ads_client)
     filter = ListProfileFilter()
-    profiles = await profile_api.list(filter)
+    profiles = await profile_api.query(filter)
     print(profiles)

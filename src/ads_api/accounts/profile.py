@@ -8,7 +8,7 @@ __all__ = ["ProfileApi", "ListProfileFilter"]
 
 
 class ProfileApi(Base):
-    async def list(
+    async def query(
         self, filter: Optional["ListProfileFilter"] = None
     ) -> Result[list["Profile"], Exception]:
         param = filter.to_param() if filter else None

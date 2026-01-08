@@ -2,21 +2,26 @@ from typing_extensions import override
 import httpx
 from .setting import settings
 from .enums import Region
-from typing import Any, Optional
+from typing import Any
 import pydantic
 from returns.result import Result, Success, Failure
 from cachetools import TTLCache
 from returns.pipeline import is_successful
-from . import util
+from .util import to_camel
 
-__all__ = ["create_ads_client", "Credentials", "Base", "CamelCaseBaseModel"]
+__all__ = [
+    "create_ads_client",
+    "Credentials",
+    "Base",
+    "CamelCaseBaseModel",
+    "BaseWithProfileId",
+]
 
 
 class Credentials(pydantic.BaseModel):
     client_id: str
     client_secret: str
     refresh_token: str
-    profile_id: Optional[str] = None
 
 
 class AccessTokenResponse(pydantic.BaseModel):
@@ -96,7 +101,19 @@ class Base:
         self.client = client
 
 
+class BaseWithProfileId(Base):
+    def __init__(self, client: httpx.AsyncClient, profile_id: str):
+        client.headers.update({"Amazon-Advertising-API-Scope": profile_id})
+        super().__init__(client)
+
+
+class BaseWithAccountId(Base):
+    def __init__(self, client: httpx.AsyncClient, account_id: str):
+        client.headers.update({"Amazon-Ads-AccountId": account_id})
+        super().__init__(client)
+
+
 class CamelCaseBaseModel(pydantic.BaseModel):
     class Config:
-        alias_generator = util.to_camel
+        alias_generator = to_camel
         allow_population_by_field_name = True
