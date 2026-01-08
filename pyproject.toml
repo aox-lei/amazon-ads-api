@@ -7,9 +7,29 @@ requires-python = ">=3.9"
 dependencies = [
     "cachetools>=6.2.4",
     "httpx>=0.28.1",
-    "pydantic>=2.12.5",
-    "pydantic-settings>=2.11.0",
+    "pydantic[dotenv]==1.10",
     "pytest>=8.4.2",
     "pytest-asyncio>=1.2.0",
     "returns>=0.23.0",
 ]
+
+[dependency-groups]
+dev = ["python-dotenv>=1.2.1"]
+
+[tool.basedpyright]
+allowedUntypedLibraries = [
+    "returns"
+]
+
+typeCheckingMode = "recommended"
+
+strictListInference = true
+strictDictionaryInference = true
+strictParameterNoneValue = true
+enableTypeIgnoreComments = true
+
+reportAny = false
+reportExplicitAny = false
+reportUntypedFunctionDecorator = false
+reportIgnoreCommentWithoutRule = false
+reportUnannotatedClassAttribute = false

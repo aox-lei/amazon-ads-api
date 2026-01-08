@@ -1,8 +1,14 @@
 import pytest
 import asyncio
-from ads_api import settings, enums
+import httpx
+from ads_api import settings, enums, create_client, Credentials
 
 
-def test_settings():
-    url = settings.get_auth_url(enums.Region.EU)
-    print(url)
+@pytest.mark.asyncio
+async def test_test(credentials: Credentials):
+    httpx_client = create_client(enums.Region.EU, credentials)
+    async with httpx_client as client:
+        response = await client.get(
+            f"{settings.API_ENDPOINT_EU}/v2/profiles"
+        )
+        print(response)
