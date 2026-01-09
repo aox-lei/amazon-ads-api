@@ -154,3 +154,9 @@ class SPAdUpdate(CamelCaseBaseModel):
 
 
 # endregion
+
+# region SPAdMultiStatusSuccess
+class SPAdMultiStatusSuccess(CamelCaseBaseModel):
+    ad: SPAd
+    index: int
+# endregion

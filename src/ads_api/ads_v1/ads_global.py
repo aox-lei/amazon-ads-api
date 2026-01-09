@@ -2,61 +2,67 @@ from typing import Optional
 
 from returns.result import Failure, Success, Result
 
-from .types.common_type import ErrorsIndex
 from ads_api.base import BaseWithProfileId, CamelCaseBaseModel
 import pydantic
 from typing_extensions import Literal
 from .types.enums import SPAdStateFilter
-from .types.ads_type import SPAd, SPAdCreate, SPAdUpdate, SPAdMultiStatusSuccess
+from .types.common_type import ErrorsIndex
+from .types.ads_global_type import (
+    SPGlobalAdPartialIndex,
+    SPGlobalAdMultiStatusSuccess,
+    SPGlobalAd,
+    SPGlobalAdCreate,
+    SPGlobalAdUpdate,
+)
 
 
-class AdsApi(BaseWithProfileId):
+class AdsGlobalApi(BaseWithProfileId):
     async def query(
-        self, filter: "ListAdFilter", next_token: Optional[str] = None
-    ) -> Result["ListAdResponse", Exception]:
+        self, filter: "ListGlobalAdFilter", next_token: Optional[str] = None
+    ) -> Result["ListGlobalAdResponse", Exception]:
         body = filter.to_body(next_token)
         try:
             response = await self.client.post("/adsApi/v1/query/ads", json=body)
             response_data = response.json()
-            return Success(ListAdResponse(**response_data))
+            return Success(ListGlobalAdResponse(**response_data))
         except Exception as e:
             return Failure(e)
 
     async def create(
-        self, ads: list[SPAdCreate]
-    ) -> Result["OperationAdResponse", Exception]:
+        self, ads: list[SPGlobalAdCreate]
+    ) -> Result["OperationGlobalAdResponse", Exception]:
         body = {"ads": [item.dict(exclude_none=True, by_alias=True) for item in ads]}
         try:
             response = await self.client.post("/adsApi/v1/create/ads", json=body)
             response_data = response.json()
-            return Success(OperationAdResponse(**response_data))
+            return Success(OperationGlobalAdResponse(**response_data))
         except Exception as e:
             return Failure(e)
 
     async def delete(
         self, ad_ids: list[str]
-    ) -> Result["OperationAdResponse", Exception]:
+    ) -> Result["OperationGlobalAdResponse", Exception]:
         body = {"adIds": ad_ids}
         try:
             response = await self.client.post("/adsApi/v1/delete/ads", json=body)
             response_data = response.json()
-            return Success(OperationAdResponse(**response_data))
+            return Success(OperationGlobalAdResponse(**response_data))
         except Exception as e:
             return Failure(e)
 
     async def update(
-        self, ads: list[SPAdUpdate]
-    ) -> Result["OperationAdResponse", Exception]:
+        self, ads: list[SPGlobalAdUpdate]
+    ) -> Result["OperationGlobalAdResponse", Exception]:
         body = {"ads": [item.dict(exclude_none=True, by_alias=True) for item in ads]}
         try:
             response = await self.client.post("/adsApi/v1/update/ads", json=body)
             response_data = response.json()
-            return Success(OperationAdResponse(**response_data))
+            return Success(OperationGlobalAdResponse(**response_data))
         except Exception as e:
             return Failure(e)
 
 
-class ListAdFilter(CamelCaseBaseModel):
+class ListGlobalAdFilter(CamelCaseBaseModel):
     ad_group_id_filter: Optional[list[str]] = pydantic.Field(
         default=None, min_items=0, max_items=100
     )
@@ -64,9 +70,7 @@ class ListAdFilter(CamelCaseBaseModel):
         default=None, min_items=0, max_items=100
     )
     ad_product_filter: list[Literal["SPONSORED_PRODUCTS"]] = ["SPONSORED_PRODUCTS"]
-    campaign_id_filter: Optional[list[str]] = pydantic.Field(
-        default=None, min_items=0, max_items=100
-    )
+    marketplace_scope_filter: list[Literal["GLOBAL"]] = ["GLOBAL"]
     max_results: int = 1000
     state_filter: Optional[list[SPAdStateFilter]] = pydantic.Field(
         default=None, min_items=0, max_items=3
@@ -75,12 +79,11 @@ class ListAdFilter(CamelCaseBaseModel):
     def to_body(self, next_token: Optional[str] = None):
         body = self.dict(exclude_none=True, by_alias=True)
         body["adProductFilter"] = {"include": self.ad_product_filter}
+        body["marketplaceScopeFilter"] = {"include": self.marketplace_scope_filter}
         if self.ad_group_id_filter is not None:
             body["adGroupIdFilter"] = {"include": self.ad_group_id_filter}
         if self.ad_id_filter is not None:
             body["adIdFilter"] = {"include": self.ad_id_filter}
-        if self.campaign_id_filter is not None:
-            body["campaignIdFilter"] = {"include": self.campaign_id_filter}
         if self.state_filter is not None:
             body["stateFilter"] = {"include": self.state_filter}
         if next_token is not None:
@@ -90,8 +93,8 @@ class ListAdFilter(CamelCaseBaseModel):
 
 
 # region ListAdResponse
-class ListAdResponse(CamelCaseBaseModel):
-    ads: Optional[list[SPAd]] = None
+class ListGlobalAdResponse(CamelCaseBaseModel):
+    ads: Optional[list[SPGlobalAd]] = None
     next_token: Optional[str] = None
 
 
@@ -99,9 +102,10 @@ class ListAdResponse(CamelCaseBaseModel):
 
 
 # region OperationAdResponse
-class OperationAdResponse(CamelCaseBaseModel):
-    error: Optional[list[ErrorsIndex]]
-    success: Optional[list[SPAdMultiStatusSuccess]]
+class OperationGlobalAdResponse(CamelCaseBaseModel):
+    error: Optional[list[ErrorsIndex]] = None
+    partial_success: Optional[list[SPGlobalAdPartialIndex]] = None
+    success: Optional[list[SPGlobalAdMultiStatusSuccess]] = None
 
 
 # endregion
