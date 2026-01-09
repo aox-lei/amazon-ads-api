@@ -1,7 +1,7 @@
 from typing import Optional
 
 from returns.result import Failure, Success, Result
-from ads_api.ads_v1.campaigns_type import (
+from .types.campaigns_type import (
     SPCampaign,
     SPCampaignCreate,
     SPCampaignMultiStatusSuccess,
@@ -9,9 +9,9 @@ from ads_api.ads_v1.campaigns_type import (
 )
 from ads_api.base import BaseWithProfileId, CamelCaseBaseModel
 from typing_extensions import Literal
-from .common_type import ErrorsIndex
+from .types.common_type import ErrorsIndex
 import pydantic
-from .enums import SPCampaignStateFilter
+from .types.enums import SPCampaignStateFilter
 
 __all__ = ["CampaignApi", "ListCampaignFilter", "SPCampaignStateFilter"]
 

@@ -252,6 +252,9 @@ class SPGlobalCreateState(str, Enum):
     ENABLED = "ENABLED"  # 活动
     PAUSED = "PAUSED"  # 暂停
 
+class SPGlobalUpdateState(str, Enum):
+    ENABLED = "ENABLED"  # 活动
+    PAUSED = "PAUSED"  # 暂停
 
 # endregion
 
@@ -553,15 +556,6 @@ class SPDeliveryStatus(str, Enum):
     UNAVAILABLE = "UNAVAILABLE"  # 不可用
 
 
-class SPGlobalDeliveryStatus(str, Enum):
-    DELIVERING = "DELIVERING"  # 正在交付
-    LIMITED = (
-        "LIMITED"  # 表示部分交付状态，适用于在不同市场具有不同交付状态的全球资源。
-    )
-    NOT_DELIVERING = "NOT_DELIVERING"  # 未交付
-    UNAVAILABLE = "UNAVAILABLE"  # 不可用
-
-
 # endregion
 
 
@@ -674,6 +668,12 @@ class SPAdGroupStateFilter(str, Enum):
     AdGroup 状态
     """
 
+    ENABLED = "ENABLED"  # 启用
+    PAUSED = "PAUSED"  # 暂停
+    ARCHIVED = "ARCHIVED"  # 归档
+
+
+class SPGlobalAdGroupStateFilter(str, Enum):
     ENABLED = "ENABLED"  # 启用
     PAUSED = "PAUSED"  # 暂停
     ARCHIVED = "ARCHIVED"  # 归档

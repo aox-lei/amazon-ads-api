@@ -4,7 +4,7 @@ import pydantic
 from typing_extensions import Literal
 from ads_api.base import CamelCaseBaseModel
 from .enums import *
-from .campaigns_type import Error
+from .common_type import Error, SPGlobalStatus, SPGlobalTag, SPGlobalCreateTag
 
 
 # region 预算 Model
@@ -120,20 +120,6 @@ class SPGlobalCreateAutoCreationSettings(CamelCaseBaseModel):
 
 
 # endregion
-# region 运行状态
-class SPGlobalStatusMarketplaceSetting(CamelCaseBaseModel):
-    delivery_reason: Optional[list[SPGlobalDeliveryReason]] = None
-    delivery_status: SPDeliveryStatus
-    marketplace: SPGlobalMarketplace
-
-
-class SPGlobalStatus(CamelCaseBaseModel):
-    delivery_reasons: Optional[list[SPGlobalDeliveryReason]] = None
-    delivery_status: SPDeliveryStatus
-    marketplace_settings: list[SPGlobalStatusMarketplaceSetting]
-
-
-# endregion
 
 # region SPGlobalCampaign
 
@@ -169,20 +155,6 @@ class SPGlobalCampaign(CamelCaseBaseModel):
     status: Optional[SPGlobalStatus]  # 状态
     # 开放式标签, 自定义
     tags: Optional[list["SPGlobalTag"]] = pydantic.Field(default=None, max_items=50)
-
-
-# endregion
-
-
-# region Tag Model
-class SPGlobalCreateTag(CamelCaseBaseModel):
-    key: str
-    value: str
-
-
-class SPGlobalTag(CamelCaseBaseModel):
-    key: str
-    value: str
 
 
 # endregion
@@ -249,7 +221,7 @@ class SPGlobalCampaignUpdate(CamelCaseBaseModel):
     start_datetime: Optional[datetime] = pydantic.Field(
         default=None, alias="startDateTime"
     )
-    state: Optional[SPGlobalCreateState] = None
+    state: Optional[SPGlobalUpdateState] = None
     tags: Optional[list[SPGlobalCreateTag]] = pydantic.Field(default=None, max_items=50)
 
 

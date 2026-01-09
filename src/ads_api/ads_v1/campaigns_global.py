@@ -1,20 +1,20 @@
 from typing import Optional
 from typing_extensions import Literal
 from ads_api.base import BaseWithAccountId, CamelCaseBaseModel
-from .enums import SPCampaignStateFilter
+from .types.enums import SPCampaignStateFilter
 import pydantic
 from returns.result import Result, Failure, Success
-from .campaigns_global_type import (
+from .types.campaigns_global_type import (
     SPGlobalCampaign,
     SPGlobalCampaignPartialIndex,
     SPGlobalCampaignMultiStatusSuccess,
     SPGlobalCampaignCreate,
     SPGlobalCampaignUpdate,
 )
-from .campaigns_type import ErrorsIndex
+from .types.common_type import ErrorsIndex
 
 
-class CampaginGroupApi(BaseWithAccountId):
+class CampaginGlobalApi(BaseWithAccountId):
     async def query(
         self,
         filter: "ListGlobalCampaignFilter",
