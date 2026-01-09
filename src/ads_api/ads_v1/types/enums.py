@@ -252,9 +252,11 @@ class SPGlobalCreateState(str, Enum):
     ENABLED = "ENABLED"  # 活动
     PAUSED = "PAUSED"  # 暂停
 
+
 class SPGlobalUpdateState(str, Enum):
     ENABLED = "ENABLED"  # 活动
     PAUSED = "PAUSED"  # 暂停
+
 
 # endregion
 
@@ -674,6 +676,16 @@ class SPAdGroupStateFilter(str, Enum):
 
 
 class SPGlobalAdGroupStateFilter(str, Enum):
+    ENABLED = "ENABLED"  # 启用
+    PAUSED = "PAUSED"  # 暂停
+    ARCHIVED = "ARCHIVED"  # 归档
+
+
+# endregion
+
+
+# region SPAdStateFilter
+class SPAdStateFilter(str, Enum):
     ENABLED = "ENABLED"  # 启用
     PAUSED = "PAUSED"  # 暂停
     ARCHIVED = "ARCHIVED"  # 归档
