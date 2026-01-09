@@ -4,12 +4,12 @@ from returns.result import Failure, Success, Result
 from ads_api.ads_v1.campaigns_type import (
     SPCampaign,
     SPCampaignCreate,
-    ErrorsIndex,
     SPCampaignMultiStatusSuccess,
     SPCampaignUpdate,
 )
 from ads_api.base import BaseWithProfileId, CamelCaseBaseModel
 from typing_extensions import Literal
+from .common_type import ErrorsIndex
 import pydantic
 from .enums import SPCampaignStateFilter
 

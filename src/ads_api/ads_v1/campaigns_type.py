@@ -3,6 +3,7 @@ from typing import Optional
 from ads_api.base import CamelCaseBaseModel
 from typing_extensions import Literal
 from .enums import *
+from .common_type import SPStatus, SPTag, SPCreateTag
 import pydantic
 
 
@@ -235,26 +236,6 @@ class SPUpdateCampaignOptimizations(CamelCaseBaseModel):
 # endregion
 
 
-# region Tag Model
-class SPCreateTag(CamelCaseBaseModel):
-    key: str
-    value: str
-
-
-class SPTag(CamelCaseBaseModel):
-    key: str
-    value: str
-
-
-# endregion
-
-
-# region SPCampagin
-class SPStatus(CamelCaseBaseModel):
-    delivery_reasons: Optional[list[SPDeliveryReason]] = None
-    delivery_status: SPDeliveryStatus
-
-
 class SPCampaign(CamelCaseBaseModel):
     ad_product: Literal["SPONSORED_PRODUCTS"]
     auto_creation_settings: SPAutoCreationSettings
@@ -336,20 +317,6 @@ class SPCampaignUpdate(CamelCaseBaseModel):
 
 # endregion
 
-
-# region ErrorsIndex Response
-class Error(CamelCaseBaseModel):
-    code: ErrorCode
-    field_location: Optional[str] = None
-    message: str
-
-
-class ErrorsIndex(CamelCaseBaseModel):
-    errors: list[Error]
-    index: int
-
-
-# endregion
 
 
 # region SPCampaignMultiStatusSuccess Response

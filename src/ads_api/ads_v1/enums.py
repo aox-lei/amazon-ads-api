@@ -666,3 +666,17 @@ class ErrorCode(str, Enum):
 
 
 # endregion
+
+
+# region SPAdGroupStateFilter
+class SPAdGroupStateFilter(str, Enum):
+    """
+    AdGroup 状态
+    """
+
+    ENABLED = "ENABLED"  # 启用
+    PAUSED = "PAUSED"  # 暂停
+    ARCHIVED = "ARCHIVED"  # 归档
+
+
+# endregion
