@@ -7,7 +7,7 @@ import pydantic
 from typing_extensions import Literal
 from .types.enums import SPAdStateFilter
 from .types.common_type import ErrorsIndex
-from .types.ads_global_type import (
+from .types.ads_type import (
     SPGlobalAdPartialIndex,
     SPGlobalAdMultiStatusSuccess,
     SPGlobalAd,

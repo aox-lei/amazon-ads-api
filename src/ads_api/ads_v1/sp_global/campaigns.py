@@ -4,7 +4,7 @@ from ads_api.base import BaseWithAccountId, CamelCaseBaseModel
 from .types.enums import SPCampaignStateFilter
 import pydantic
 from returns.result import Result, Failure, Success
-from .types.campaigns_global_type import (
+from .types.campaigns_type import (
     SPGlobalCampaign,
     SPGlobalCampaignPartialIndex,
     SPGlobalCampaignMultiStatusSuccess,

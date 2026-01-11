@@ -3,7 +3,6 @@ from typing import Optional
 from typing_extensions import Literal
 from .enums import (
     SPGlobalCreateState,
-    SPGlobalCurrencyCode,
     SPGlobalMarketplace,
     SPGlobalState,
 )
