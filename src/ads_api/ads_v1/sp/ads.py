@@ -2,12 +2,12 @@ from typing import Optional
 
 from returns.result import Failure, Success, Result
 
-from .types.common_type import ErrorsIndex
+from .types.common import ErrorsIndex
 from ads_api.base import BaseWithProfileId, CamelCaseBaseModel
 import pydantic
 from typing_extensions import Literal
 from .types.enums import SPAdStateFilter
-from .types.ads_type import SPAd, SPAdCreate, SPAdUpdate, SPAdMultiStatusSuccess
+from .types.ads import SPAd, SPAdCreate, SPAdUpdate, SPAdMultiStatusSuccess
 
 
 class AdsApi(BaseWithProfileId):

@@ -4,7 +4,7 @@ from typing import Optional
 from typing_extensions import Literal
 from ads_api.base import CamelCaseBaseModel
 from .enums import *
-from .common_type import SPStatus, SPTag, SPCreateTag
+from .common import SPStatus, SPTag, SPCreateTag
 
 
 # region 出价 Model

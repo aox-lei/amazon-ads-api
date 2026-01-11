@@ -6,8 +6,8 @@ from ads_api.base import BaseWithProfileId, CamelCaseBaseModel
 import pydantic
 from typing_extensions import Literal
 from .types.enums import SPAdStateFilter
-from .types.common_type import ErrorsIndex
-from .types.ads_type import (
+from .types.common import ErrorsIndex
+from .types.ads import (
     SPGlobalAdPartialIndex,
     SPGlobalAdMultiStatusSuccess,
     SPGlobalAd,

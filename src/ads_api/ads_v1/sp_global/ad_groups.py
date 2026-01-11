@@ -1,11 +1,11 @@
 from typing import Optional
 import pydantic
 from typing_extensions import Literal
-from types.common_type import ErrorsIndex
+from types.common import ErrorsIndex
 from ads_api.base import BaseWithAccountId, CamelCaseBaseModel
 from returns.result import Result, Success, Failure
 from .types.enums import SPGlobalAdGroupStateFilter
-from .types.ad_groups_type import (
+from .types.ad_groups import (
     SPGlobalAdGroup,
     SPGlobalAdGroupCreate,
     SPGlobalAdGroupPartialIndex,

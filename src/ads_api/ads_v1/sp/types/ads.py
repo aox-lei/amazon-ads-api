@@ -3,7 +3,7 @@ from typing import Optional
 from ads_api.base import CamelCaseBaseModel
 from typing_extensions import Literal
 from .enums import *
-from .common_type import SPStatus, SPTag, SPCreateTag
+from .common import SPStatus, SPTag, SPCreateTag
 import pydantic
 
 

@@ -4,13 +4,13 @@ from ads_api.base import BaseWithProfileId, CamelCaseBaseModel
 from typing_extensions import Literal
 import pydantic
 from .types.enums import MatchType, SPTargetType
-from .types.targets_type import (
+from .types.targets import (
     SPTarget,
     SPTargetCreate,
     SPTargetMultiStatusSuccess,
     SPTargetUpdate,
 )
-from .types.common_type import ErrorsIndex
+from .types.common import ErrorsIndex
 
 
 class TargetApi(BaseWithProfileId):

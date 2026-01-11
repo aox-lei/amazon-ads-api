@@ -8,7 +8,7 @@ from .enums import (
     SPGlobalState,
 )
 from ads_api.base import CamelCaseBaseModel
-from .common_type import (
+from .common import (
     SPGlobalCreateTag,
     SPTag,
     SPGlobalStatus,

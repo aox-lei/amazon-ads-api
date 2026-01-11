@@ -11,7 +11,7 @@ from .enums import (
     SPTargetType,
     SPUpdateState
 )
-from .common_type import SPStatus, SPTag,SPCreateTag
+from .common import SPStatus, SPTag,SPCreateTag
 
 
 # region 出价

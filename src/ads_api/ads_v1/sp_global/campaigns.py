@@ -1,17 +1,17 @@
 from typing import Optional
 from typing_extensions import Literal
 from ads_api.base import BaseWithAccountId, CamelCaseBaseModel
-from .types.enums import SPCampaignStateFilter
+from .types.enums import SPGlobalCampaignStateFilter
 import pydantic
 from returns.result import Result, Failure, Success
-from .types.campaigns_type import (
+from .types.campaigns import (
     SPGlobalCampaign,
     SPGlobalCampaignPartialIndex,
     SPGlobalCampaignMultiStatusSuccess,
     SPGlobalCampaignCreate,
     SPGlobalCampaignUpdate,
 )
-from .types.common_type import ErrorsIndex
+from .types.common import ErrorsIndex
 
 
 class CampaginGlobalApi(BaseWithAccountId):
@@ -89,7 +89,7 @@ class ListGlobalCampaignFilter(CamelCaseBaseModel):
     protfolio_id_filter: Optional[list[str]] = pydantic.Field(
         default=None, min_items=0, max_items=100
     )
-    state_filter: Optional[list[SPCampaignStateFilter]] = pydantic.Field(
+    state_filter: Optional[list[SPGlobalCampaignStateFilter]] = pydantic.Field(
         default=None, min_items=0, max_items=3
     )
 

@@ -4,7 +4,7 @@ import pydantic
 from typing_extensions import Literal
 from ads_api.base import CamelCaseBaseModel
 from .enums import *
-from .common_type import Error, SPGlobalStatus, SPGlobalTag, SPGlobalCreateTag
+from .common import Error, SPGlobalStatus, SPGlobalTag, SPGlobalCreateTag
 
 
 # region 预算 Model

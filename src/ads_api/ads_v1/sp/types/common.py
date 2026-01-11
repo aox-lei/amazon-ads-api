@@ -6,8 +6,6 @@ from .enums import (
     SPDeliveryReason,
     SPDeliveryStatus,
     ErrorCode,
-    SPGlobalDeliveryReason,
-    SPGlobalMarketplace,
 )
 
 
@@ -15,6 +13,7 @@ from .enums import (
 class SPStatus(CamelCaseBaseModel):
     delivery_reasons: Optional[list[SPDeliveryReason]] = None
     delivery_status: SPDeliveryStatus
+
 
 # endregion
 
@@ -28,7 +27,8 @@ class SPTag(CamelCaseBaseModel):
 class SPCreateTag(CamelCaseBaseModel):
     key: str
     value: str
-    
+
+
 class SPGlobalCreateTag(CamelCaseBaseModel):
     key: str
     value: str
@@ -52,22 +52,6 @@ class Error(CamelCaseBaseModel):
 class ErrorsIndex(CamelCaseBaseModel):
     errors: list[Error]
     index: int
-
-
-# endregion
-
-
-# region 全局市场运行状态
-class SPGlobalStatusMarketplaceSetting(CamelCaseBaseModel):
-    delivery_reason: Optional[list[SPGlobalDeliveryReason]] = None
-    delivery_status: SPDeliveryStatus
-    marketplace: SPGlobalMarketplace
-
-
-class SPGlobalStatus(CamelCaseBaseModel):
-    delivery_reasons: Optional[list[SPGlobalDeliveryReason]] = None
-    delivery_status: SPDeliveryStatus
-    marketplace_settings: list[SPGlobalStatusMarketplaceSetting]
 
 
 # endregion

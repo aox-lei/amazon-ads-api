@@ -4,13 +4,13 @@ from returns.result import Failure, Success, Result
 from .types.enums import SPAdGroupStateFilter
 from ads_api.base import BaseWithProfileId, CamelCaseBaseModel
 from typing_extensions import Literal
-from .types.ad_groups_type import (
+from .types.ad_groups import (
     SPAdGroup,
     SPAdGroupCreate,
     SPAdGroupMultiStatusSuccess,
     SPAdGroupUpdate,
 )
-from .types.common_type import ErrorsIndex
+from .types.common import ErrorsIndex
 
 
 class AdGroupsApi(BaseWithProfileId):
