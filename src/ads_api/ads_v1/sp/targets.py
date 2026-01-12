@@ -93,7 +93,7 @@ class ListTargetFilter(CamelCaseBaseModel):
 
     def to_body(self, next_token: Optional[str] = None):
         body = self.dict(exclude_none=True, by_alias=True)
-        body["adProductFilter1"] = {"include": ["SPONSORED_PRODUCTS"]}
+        body["adProductFilter"] = {"include": ["SPONSORED_PRODUCTS"]}
         if self.ad_group_filter is not None:
             body["adGroupFilter"] = {"include": self.ad_group_filter}
 

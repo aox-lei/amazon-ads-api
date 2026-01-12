@@ -188,7 +188,7 @@ class SPTarget(CamelCaseBaseModel):
         default=..., alias="lastUpdatedDateTime"
     )
     marketplace_scope: Literal["SINGLE_MARKETPLACE"]
-    marketplaces: SPMarketplace
+    marketplaces: list[SPMarketplace]
     negative: bool
     state: SPState
     status: Optional[SPStatus] = None

@@ -4,6 +4,7 @@ from ads_api.ads_v1.sp.targets import (
     TargetApi,
     ListTargetFilter,
 )
+from ads_api.ads_v1.sp.types.enums import SPTargetType
 from ads_api import Credentials, enums, create_ads_client
 from returns.pipeline import is_successful
 from pprint import pprint as print

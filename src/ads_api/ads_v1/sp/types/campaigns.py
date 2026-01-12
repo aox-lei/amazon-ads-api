@@ -295,6 +295,19 @@ class SPCampaignCreate(CamelCaseBaseModel):
     state: SPCreateState
     tags: Optional[SPCreateTag] = None
 
+    @staticmethod
+    def set_budgets(budget_value: float):
+        """设置预算值"""
+        return list[
+            SPCreateBudget(
+                budget_value=SPCreateBudgetValue(
+                    monetary_budget_value=SPCreateMonetaryBudgetValue(
+                        monetary_budget=SPCreateMonetaryBudget(value=budget_value)
+                    )
+                )
+            )
+        ]
+
 
 # endregion
 
@@ -316,7 +329,6 @@ class SPCampaignUpdate(CamelCaseBaseModel):
 
 
 # endregion
-
 
 
 # region SPCampaignMultiStatusSuccess Response
