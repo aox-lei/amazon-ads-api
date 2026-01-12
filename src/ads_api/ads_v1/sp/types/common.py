@@ -5,8 +5,8 @@ from ads_api.base import CamelCaseBaseModel
 from .enums import (
     SPDeliveryReason,
     SPDeliveryStatus,
-    ErrorCode,
 )
+from ads_api.ads_v1.base import ErrorCode
 
 
 # region 状态

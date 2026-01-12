@@ -12,62 +12,65 @@ from .types.campaigns import (
     SPGlobalCampaignUpdate,
 )
 from .types.common import ErrorsIndex
+from ads_api.ads_v1.base import handle_api_errors
+from httpx import Response
 
 
 class CampaginGlobalApi(BaseWithAccountId):
+
+    @handle_api_errors
     async def query(
         self,
         filter: "ListGlobalCampaignFilter",
         next_token: Optional[str] = None,
-    ) -> Result["ListGlobalCampaignResponse", Exception]:
+    ) -> Result["ListGlobalCampaignResponse", Response]:
         body = filter.to_body(next_token)
-        try:
-            response = await self.client.post("/adsApi/v1/query/campaigns", json=body)
+        response = await self.client.post("/adsApi/v1/query/campaigns", json=body)
+        if response.is_success:
             response_data = response.json()
             return Success(ListGlobalCampaignResponse(**response_data))
-        except Exception as e:
-            return Failure(e)
+        return Failure(response)
 
+    @handle_api_errors
     async def create(
         self, campaigns: list["SPGlobalCampaignCreate"]
-    ) -> Result["OperationGlobalCampaignResponse", Exception]:
+    ) -> Result["OperationGlobalCampaignResponse", Response]:
         body = {
             "campaigns": [
                 item.dict(exclude_none=True, by_alias=True) for item in campaigns
             ]
         }
-        try:
-            response = await self.client.post("/adsApi/v1/create/campaigns", json=body)
+        response = await self.client.post("/adsApi/v1/create/campaigns", json=body)
+        if response.is_success:
             response_data = response.json()
             return Success(OperationGlobalCampaignResponse(**response_data))
-        except Exception as e:
-            return Failure(e)
+        return Failure(response)
 
+    @handle_api_errors
     async def delete(
         self, campaign_ids: list[str]
-    ) -> Result["OperationGlobalCampaignResponse", Exception]:
+    ) -> Result["OperationGlobalCampaignResponse", Response]:
         body = {"campaignIds": campaign_ids}
-        try:
-            response = await self.client.post("/adsApi/v1/delete/campaigns", json=body)
+        response = await self.client.post("/adsApi/v1/delete/campaigns", json=body)
+        if response.is_success:
             response_data = response.json()
             return Success(OperationGlobalCampaignResponse(**response_data))
-        except Exception as e:
-            return Failure(e)
+        return Failure(response)
 
+    @handle_api_errors
     async def update(
         self, campaigns: list[SPGlobalCampaignUpdate]
-    ) -> Result["OperationGlobalCampaignResponse", Exception]:
+    ) -> Result["OperationGlobalCampaignResponse", Response]:
         body = {
             "campaigns": [
                 item.dict(exclude_none=True, by_alias=True) for item in campaigns
             ]
         }
-        try:
-            response = await self.client.post("/adsApi/v1/update/campaigns", json=body)
+        response = await self.client.post("/adsApi/v1/update/campaigns", json=body)
+        if response.is_success:
             response_data = response.json()
             return Success(OperationGlobalCampaignResponse(**response_data))
-        except Exception as e:
-            return Failure(e)
+        return Failure(response)
 
 
 # region ListCampaginFilter

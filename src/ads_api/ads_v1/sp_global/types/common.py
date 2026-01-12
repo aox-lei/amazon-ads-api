@@ -3,18 +3,18 @@ from typing import Optional
 from ads_api.base import CamelCaseBaseModel
 
 from .enums import (
-    SPDeliveryReason,
-    SPDeliveryStatus,
-    ErrorCode,
     SPGlobalDeliveryReason,
+    SPDeliveryStatus,
     SPGlobalMarketplace,
 )
+from ads_api.ads_v1.base import ErrorCode
 
 
 # region 状态
 class SPStatus(CamelCaseBaseModel):
-    delivery_reasons: Optional[list[SPDeliveryReason]] = None
+    delivery_reasons: Optional[list[SPGlobalDeliveryReason]] = None
     delivery_status: SPDeliveryStatus
+
 
 # endregion
 
@@ -28,7 +28,8 @@ class SPTag(CamelCaseBaseModel):
 class SPCreateTag(CamelCaseBaseModel):
     key: str
     value: str
-    
+
+
 class SPGlobalCreateTag(CamelCaseBaseModel):
     key: str
     value: str

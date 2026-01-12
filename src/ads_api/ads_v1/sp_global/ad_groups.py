@@ -12,60 +12,64 @@ from .types.ad_groups import (
     SPGlobalAdGroupMultiStatusSuccess,
     SPGlobalAdGroupUpdate
 )
+from ads_api.ads_v1.base import handle_api_errors
+from httpx import Response
 
 
 class AdGroupsGlobalApi(BaseWithAccountId):
+    @handle_api_errors
     async def query(
         self, filter: "ListGlobalAdGroupFilter", next_token: Optional[str] = None
-    ) -> Result["ListGlobalAdGroupsGlobalResponse", Exception]:
+    ) -> Result["ListGlobalAdGroupsGlobalResponse", Response]:
         body = filter.to_body(next_token)
-        try:
-            response = await self.client.post("/adsApi/v1/query/adGroups", json=body)
+        response = await self.client.post("/adsApi/v1/query/adGroups", json=body)
+        if response.is_success:
             response_data = response.json()
             return Success(ListGlobalAdGroupsGlobalResponse(**response_data))
-        except Exception as e:
-            return Failure(e)
+        return Failure(response)
+        
 
+    @handle_api_errors
     async def create(
         self, ad_groups: list[SPGlobalAdGroupCreate]
-    ) -> Result["OperationGlobalAdGroupResponse", Exception]:
+    ) -> Result["OperationGlobalAdGroupResponse", Response]:
         body = {
             "adGroups": [
                 item.dict(exclude_none=True, by_alias=True) for item in ad_groups
             ]
         }
-        try:
-            response = await self.client.post("/adsApi/v1/create/adGroups", json=body)
+        response = await self.client.post("/adsApi/v1/create/adGroups", json=body)
+        if response.is_success:
             response_data = response.json()
             return Success(OperationGlobalAdGroupResponse(**response_data))
-        except Exception as e:
-            return Failure(e)
+        return Failure(response)
 
+    @handle_api_errors
     async def delete(
         self, ad_group_ids: list[str]
-    ) -> Result["OperationGlobalAdGroupResponse", Exception]:
+    ) -> Result["OperationGlobalAdGroupResponse", Response]:
         body = {"adGroupIds": ad_group_ids}
-        try:
-            response = await self.client.post("/adsApi/v1/delete/adGroups", json=body)
+        response = await self.client.post("/adsApi/v1/delete/adGroups", json=body)
+        if response.is_success:
             response_data = response.json()
             return Success(OperationGlobalAdGroupResponse(**response_data))
-        except Exception as e:
-            return Failure(e)
+        return Failure(response)
 
+
+    @handle_api_errors
     async def update(
         self, ad_groups: list[SPGlobalAdGroupUpdate]
-    ) -> Result["OperationGlobalAdGroupResponse", Exception]:
+    ) -> Result["OperationGlobalAdGroupResponse", Response]:
         body = {
             "adGroups": [
                 item.dict(exclude_none=True, by_alias=True) for item in ad_groups
             ]
         }
-        try:
-            response = await self.client.post("/adsApi/v1/update/adGroups", json=body)
+        response = await self.client.post("/adsApi/v1/update/adGroups", json=body)
+        if response.is_success:
             response_data = response.json()
             return Success(OperationGlobalAdGroupResponse(**response_data))
-        except Exception as e:
-            return Failure(e)
+        return Failure(response)
 
 
 # region ListGlobalAdGroupFilter

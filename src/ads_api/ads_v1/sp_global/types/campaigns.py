@@ -142,16 +142,16 @@ class SPGlobalCampaign(CamelCaseBaseModel):
         default=..., alias="lastUpdatedDateTime"
     )
     marketplace_scope: Literal["SINGLE_MARKETPLACE"]  # 市场范围， 单一市场
-    marketplaces: Optional[list[SPMarketplace]] = pydantic.Field(
+    marketplaces: Optional[list[SPGlobalMarketplace]] = pydantic.Field(
         default=None, min_items=0, max_items=1
     )
     name: str  # 活动名称
     optimizations: Optional[SPCampaignOptimizations] = None  # 优化
     protfolio_id: Optional[str] = None  # 组合编号
-    site_restrictions: Optional[SPSiteRestriction] = None  # 网站限制
+    site_restrictions: Optional[SPGlobalSiteRestriction] = None  # 网站限制
     # 活动开始时间
     start_datetime: datetime = pydantic.Field(default=..., alias="startDateTime")
-    state: SPState  # 状态
+    state: SPGlobalState  # 状态
     status: Optional[SPGlobalStatus]  # 状态
     # 开放式标签, 自定义
     tags: Optional[list["SPGlobalTag"]] = pydantic.Field(default=None, max_items=50)

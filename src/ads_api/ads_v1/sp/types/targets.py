@@ -1,5 +1,6 @@
 from ads_api.base import CamelCaseBaseModel
-from typing import Literal, Optional
+from typing import Optional
+from typing_extensions import Literal
 import pydantic
 from datetime import datetime
 from .enums import (
@@ -9,9 +10,9 @@ from .enums import (
     SPThemeMatchType,
     SPCreateState,
     SPTargetType,
-    SPUpdateState
+    SPUpdateState,
 )
-from .common import SPStatus, SPTag,SPCreateTag
+from .common import SPStatus, SPTag, SPCreateTag
 
 
 # region 出价
@@ -22,7 +23,8 @@ class SPTargetBid(CamelCaseBaseModel):
 
 class SPCreateTargetBid(CamelCaseBaseModel):
     bid: Optional[float] = None
-    
+
+
 class SPUpdateTargetBid(CamelCaseBaseModel):
     bid: Optional[float] = None
 

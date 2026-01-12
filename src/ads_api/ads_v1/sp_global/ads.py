@@ -14,52 +14,55 @@ from .types.ads import (
     SPGlobalAdCreate,
     SPGlobalAdUpdate,
 )
+from ads_api.ads_v1.base import handle_api_errors
+from httpx import Response
 
 
 class AdsGlobalApi(BaseWithProfileId):
+
+    @handle_api_errors
     async def query(
         self, filter: "ListGlobalAdFilter", next_token: Optional[str] = None
-    ) -> Result["ListGlobalAdResponse", Exception]:
+    ) -> Result["ListGlobalAdResponse", Response]:
         body = filter.to_body(next_token)
-        try:
-            response = await self.client.post("/adsApi/v1/query/ads", json=body)
+        response = await self.client.post("/adsApi/v1/query/ads", json=body)
+        if response.is_success:
             response_data = response.json()
             return Success(ListGlobalAdResponse(**response_data))
-        except Exception as e:
-            return Failure(e)
+        return Failure(response)
 
+    @handle_api_errors
     async def create(
         self, ads: list[SPGlobalAdCreate]
-    ) -> Result["OperationGlobalAdResponse", Exception]:
+    ) -> Result["OperationGlobalAdResponse", Response]:
         body = {"ads": [item.dict(exclude_none=True, by_alias=True) for item in ads]}
-        try:
-            response = await self.client.post("/adsApi/v1/create/ads", json=body)
+        response = await self.client.post("/adsApi/v1/create/ads", json=body)
+        if response.is_success:
             response_data = response.json()
             return Success(OperationGlobalAdResponse(**response_data))
-        except Exception as e:
-            return Failure(e)
+        return Failure(response)
 
+    @handle_api_errors
     async def delete(
         self, ad_ids: list[str]
-    ) -> Result["OperationGlobalAdResponse", Exception]:
+    ) -> Result["OperationGlobalAdResponse", Response]:
         body = {"adIds": ad_ids}
-        try:
-            response = await self.client.post("/adsApi/v1/delete/ads", json=body)
+        response = await self.client.post("/adsApi/v1/delete/ads", json=body)
+        if response.is_success:
             response_data = response.json()
             return Success(OperationGlobalAdResponse(**response_data))
-        except Exception as e:
-            return Failure(e)
+        return Failure(response)
 
+    @handle_api_errors
     async def update(
         self, ads: list[SPGlobalAdUpdate]
-    ) -> Result["OperationGlobalAdResponse", Exception]:
+    ) -> Result["OperationGlobalAdResponse", Response]:
         body = {"ads": [item.dict(exclude_none=True, by_alias=True) for item in ads]}
-        try:
-            response = await self.client.post("/adsApi/v1/update/ads", json=body)
+        response = await self.client.post("/adsApi/v1/update/ads", json=body)
+        if response.is_success:
             response_data = response.json()
             return Success(OperationGlobalAdResponse(**response_data))
-        except Exception as e:
-            return Failure(e)
+        return Failure(response)
 
 
 class ListGlobalAdFilter(CamelCaseBaseModel):

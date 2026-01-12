@@ -8,52 +8,56 @@ import pydantic
 from typing_extensions import Literal
 from .types.enums import SPAdStateFilter
 from .types.ads import SPAd, SPAdCreate, SPAdUpdate, SPAdMultiStatusSuccess
+from ads_api.ads_v1.base import handle_api_errors
+from httpx import Response
 
 
 class AdsApi(BaseWithProfileId):
+    @handle_api_errors
     async def query(
         self, filter: "ListAdFilter", next_token: Optional[str] = None
-    ) -> Result["ListAdResponse", Exception]:
+    ) -> Result["ListAdResponse", Response]:
         body = filter.to_body(next_token)
-        try:
-            response = await self.client.post("/adsApi/v1/query/ads", json=body)
+        response = await self.client.post("/adsApi/v1/query/ads", json=body)
+        if response.is_success:
             response_data = response.json()
             return Success(ListAdResponse(**response_data))
-        except Exception as e:
-            return Failure(e)
+        return Failure(response)
 
+    @handle_api_errors
     async def create(
         self, ads: list[SPAdCreate]
-    ) -> Result["OperationAdResponse", Exception]:
+    ) -> Result["OperationAdResponse", Response]:
         body = {"ads": [item.dict(exclude_none=True, by_alias=True) for item in ads]}
-        try:
-            response = await self.client.post("/adsApi/v1/create/ads", json=body)
+        response = await self.client.post("/adsApi/v1/create/ads", json=body)
+        if response.is_success:
             response_data = response.json()
             return Success(OperationAdResponse(**response_data))
-        except Exception as e:
-            return Failure(e)
+        return Failure(response)
 
+    @handle_api_errors
     async def delete(
         self, ad_ids: list[str]
-    ) -> Result["OperationAdResponse", Exception]:
+    ) -> Result["OperationAdResponse", Response]:
         body = {"adIds": ad_ids}
-        try:
-            response = await self.client.post("/adsApi/v1/delete/ads", json=body)
+
+        response = await self.client.post("/adsApi/v1/delete/ads", json=body)
+        if response.is_success:
             response_data = response.json()
             return Success(OperationAdResponse(**response_data))
-        except Exception as e:
-            return Failure(e)
+        return Failure(response)
 
+    @handle_api_errors
     async def update(
         self, ads: list[SPAdUpdate]
-    ) -> Result["OperationAdResponse", Exception]:
+    ) -> Result["OperationAdResponse", Response]:
         body = {"ads": [item.dict(exclude_none=True, by_alias=True) for item in ads]}
-        try:
-            response = await self.client.post("/adsApi/v1/update/ads", json=body)
+
+        response = await self.client.post("/adsApi/v1/update/ads", json=body)
+        if response.is_success:
             response_data = response.json()
             return Success(OperationAdResponse(**response_data))
-        except Exception as e:
-            return Failure(e)
+        return Failure(response)
 
 
 class ListAdFilter(CamelCaseBaseModel):

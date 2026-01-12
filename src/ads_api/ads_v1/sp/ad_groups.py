@@ -11,60 +11,63 @@ from .types.ad_groups import (
     SPAdGroupUpdate,
 )
 from .types.common import ErrorsIndex
+from httpx import Response
+from ads_api.ads_v1.base import handle_api_errors
 
 
 class AdGroupsApi(BaseWithProfileId):
+
+    @handle_api_errors
     async def query(
         self, filter: "ListAdGroupFiler", next_token: Optional[str] = None
-    ) -> Result["ListAdGroupsResponse", Exception]:
+    ) -> Result["ListAdGroupsResponse", Response]:
         body = filter.to_body(next_token)
-        try:
-            response = await self.client.post("/adsApi/v1/query/adGroups", json=body)
+        response = await self.client.post("/adsApi/v1/query/adGroups", json=body)
+        if response.is_success:
             response_data = response.json()
             return Success(ListAdGroupsResponse(**response_data))
-        except Exception as e:
-            return Failure(e)
+        return Failure(response)
 
+    @handle_api_errors
     async def create(
         self, ad_groups: list[SPAdGroupCreate]
-    ) -> Result["OperationAdGroupResponse", Exception]:
+    ) -> Result["OperationAdGroupResponse", Response]:
         body = {
             "adGroups": [
                 item.dict(exclude_none=True, by_alias=True) for item in ad_groups
             ]
         }
-        try:
-            response = await self.client.post("/adsApi/v1/create/adGroups", json=body)
+        response = await self.client.post("/adsApi/v1/create/adGroups", json=body)
+        if response.is_success:
             response_data = response.json()
             return Success(OperationAdGroupResponse(**response_data))
-        except Exception as e:
-            return Failure(e)
+        return Failure(response)
 
+    @handle_api_errors
     async def delete(
         self, ad_group_ids: list[str]
-    ) -> Result["OperationAdGroupResponse", Exception]:
+    ) -> Result["OperationAdGroupResponse", Response]:
         body = {"adGroupIds": ad_group_ids}
-        try:
-            response = await self.client.post("/adsApi/v1/delete/adGroups", json=body)
+        response = await self.client.post("/adsApi/v1/delete/adGroups", json=body)
+        if response.is_success:
             response_data = response.json()
             return Success(OperationAdGroupResponse(**response_data))
-        except Exception as e:
-            return Failure(e)
+        return Failure(response)
 
+    @handle_api_errors
     async def update(
         self, ad_groups: list[SPAdGroupUpdate]
-    ) -> Result["OperationAdGroupResponse", Exception]:
+    ) -> Result["OperationAdGroupResponse", Response]:
         body = {
             "adGroups": [
                 item.dict(exclude_none=True, by_alias=True) for item in ad_groups
             ]
         }
-        try:
-            response = await self.client.post("/adsApi/v1/update/adGroups", json=body)
+        response = await self.client.post("/adsApi/v1/update/adGroups", json=body)
+        if response.is_success:
             response_data = response.json()
             return Success(OperationAdGroupResponse(**response_data))
-        except Exception as e:
-            return Failure(e)
+        return Failure(response)
 
 
 # region ListAdGroupFilter
@@ -86,7 +89,7 @@ class ListAdGroupFiler(CamelCaseBaseModel):
     def to_body(self, next_token: Optional[str] = None):
         body = self.dict(exclude_none=True, by_alias=True)
         body["adProductFilter"] = {"include": self.ad_product_filter}
-        
+
         if self.ad_group_id_filter is not None:
             body["adGroupIdFilter"] = {"include": self.ad_group_id_filter}
 
