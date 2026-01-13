@@ -15,10 +15,7 @@ class Settings(BaseSettings):
     API_ENDPOINT_NA: str = "https://advertising-api.amazon.com"
     API_ENDPOINT_EU: str = "https://advertising-api-eu.amazon.com"
     API_ENDPOINT_FE: str = "https://advertising-api-fe.amazon.com"
-    PROXY_URL: str = ""
-
-    class Config:  # pyright: ignore[reportIncompatibleVariableOverride]
-        env_file: str = ".env"
+    PROXY_URL: Optional[str] = None
 
     def get_auth_url(self, region: Region) -> Optional[str]:
         map_ = {

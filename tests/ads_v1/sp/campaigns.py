@@ -21,6 +21,8 @@ from ads_api.ads_v1.sp.types.enums import (
 
 @pytest.mark.asyncio
 async def test_list(credentials: Credentials):
+    
+
     ads_client = create_ads_client(enums.Region.EU, credentials)
     api = CampaignApi(ads_client, "1797199929863809")
     filter = ListCampaignFilter(state_filter=[SPCampaignStateFilter.ENABLED])
