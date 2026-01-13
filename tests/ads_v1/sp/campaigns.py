@@ -27,7 +27,6 @@ async def test_list(credentials: Credentials):
 
     data = await api.query(filter)
     if not is_successful(data):
-        print(data.failure())
         return
     data = data.unwrap()
     print(data.dict())
