@@ -1,7 +1,7 @@
 from .setting import settings
-from .base import create_ads_client, Credentials, BaseWithProfileId
+from .base import create_ads_client, Credentials, BaseWithProfileId, Region
 
-__all__ = ["settings", "create_ads_client", "Credentials", "BaseWithProfileId"]
+__all__ = ["settings", "create_ads_client", "Credentials", "BaseWithProfileId", "Region"]
 
 
 def set_proxy(proxy_url: str):

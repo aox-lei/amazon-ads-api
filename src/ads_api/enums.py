@@ -7,6 +7,27 @@ class Region(str, Enum):
     EU = "EU"  # 欧洲
     FE = "FE"  # 远东
 
+    @classmethod
+    def by_country_code(cls, country_code: str):
+        if country_code in ["US", "CA", "MX", "BR"]:
+            return cls.NA
+        if country_code in [
+            "DE",
+            "FR",
+            "IT",
+            "ES",
+            "UK",
+            "NL",
+            "PL",
+            "SE",
+            "BE",
+            "IE",
+            "GB",
+        ]:
+            return cls.EU
+        if country_code in ["JP", "AU", "SG"]:
+            return cls.FE
+
 
 # endregion
 
