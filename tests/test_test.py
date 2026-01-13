@@ -4,18 +4,18 @@ import asyncio
 import httpx
 import pydantic
 from ads_api import settings, enums, create_ads_client, Credentials
+from datetime import datetime, timezone
+import pendulum
+
 
 class A(pydantic.BaseModel):
-    name: str
-    age: Optional[int] = None
+    starttime: datetime = pydantic.Field(default_factory=lambda:datetime.now(timezone.utc))
     
-    def set_age(self, age:int):
-        self.age = age
-        return self
-
+    @pydantic.validator("starttime", always=True)
+    def validate_starttime(cls, v:datetime):
+        return pendulum.instance(v).format("YYYY-MM-DDTHH:mm:ss[Z]")
 
 @pytest.mark.asyncio
 async def test_test():
-    a= A(name="zhangsan")
-    _ = a.set_age(10)
-    print(a)
+    a = A()
+    print(type(a.starttime))

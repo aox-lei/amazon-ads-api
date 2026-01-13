@@ -1,10 +1,11 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional
 from ads_api.base import CamelCaseBaseModel
 from typing_extensions import Literal
 from .enums import *
 from .common import SPStatus, SPTag, SPCreateTag
 import pydantic
+import pendulum
 
 
 # region 自动创建
@@ -291,14 +292,29 @@ class SPCampaignCreate(CamelCaseBaseModel):
     site_restrictions: Optional[list[SPSiteRestriction]] = pydantic.Field(
         default=None, max_items=1
     )
-    start_datetime: datetime
-    state: SPCreateState
+    start_datetime: datetime = pydantic.Field(
+        default_factory=lambda: datetime.now(timezone.utc), alias="startDateTime"
+    )
+    state: SPCreateState = SPCreateState.ENABLED
     tags: Optional[SPCreateTag] = None
 
+    @pydantic.validator("start_datetime", always=True)  # type:ignore
+    def validate_starttime(cls, v: datetime):
+        return pendulum.instance(v).format("YYYY-MM-DDTHH:mm:ss[Z]")
+
     @staticmethod
-    def set_budgets(budget_value: float):
+    def create_auto_creation_settings(
+        auto_create_targets: bool = True, auto_manage_campaign: Optional[bool] = None
+    ):
+        return SPCreateAutoCreationSettings(
+            auto_create_targets=auto_create_targets,
+            auto_manage_campaign=auto_manage_campaign,
+        )
+
+    @staticmethod
+    def create_budgets(budget_value: float) -> list[SPCreateBudget]:
         """设置预算值"""
-        return list[
+        return [
             SPCreateBudget(
                 budget_value=SPCreateBudgetValue(
                     monetary_budget_value=SPCreateMonetaryBudgetValue(
@@ -307,6 +323,53 @@ class SPCampaignCreate(CamelCaseBaseModel):
                 )
             )
         ]
+
+    @staticmethod
+    def create_optimizations(
+        bid_settings: Optional[SPCreateBidSettings] = None,
+        budget_settings: Optional[SPCreateBudgetSettings] = None,
+    ):
+        return SPCreateCampaignOptimizations(
+            bid_settings=bid_settings, budget_settings=budget_settings
+        )
+
+    @staticmethod
+    def create_bid_settings(
+        audience_adjustment: Optional[list[SPCreateAudienceBidAdjustment]],
+        placement_adjustment: Optional[list[SPCreatePlacementBidAdjustment]] = None,
+        bid_strategy: Optional[SPBidStrategy] = None,
+    ):
+        return SPCreateBidSettings(
+            bid_adjustments=SPCreateBidAdjustments(
+                audience_bid_adjustments=audience_adjustment,
+                placement_bid_adjustments=placement_adjustment,
+            ),
+            bid_strategy=bid_strategy,
+        )
+
+    @staticmethod
+    def create_budget_settings(
+        off_amazon_budget_control_strategy: Optional[
+            SPOffAmazonBudgetControlStrategy
+        ] = None,
+    ):
+        return SPCreateBudgetSettings(
+            off_amazon_budget_control_strategy=off_amazon_budget_control_strategy
+        )
+
+    @staticmethod
+    def create_audience_adjustment(audience_id: str, percentage: int):
+        return [
+            SPCreateAudienceBidAdjustment(
+                audience_id=audience_id, percentage=percentage
+            )
+        ]
+
+    @staticmethod
+    def create_placement_adjustment(placement: SPPlacement, percentage: int):
+        return SPCreatePlacementBidAdjustment(
+            placement=placement, percentage=percentage
+        )
 
 
 # endregion
@@ -325,7 +388,7 @@ class SPCampaignUpdate(CamelCaseBaseModel):
         default=None, alias="startDateTime"
     )
     state: Optional[SPUpdateState] = None
-    tags: Optional[dict[str, str]]
+    tags: Optional[dict[str, str]] = None
 
 
 # endregion

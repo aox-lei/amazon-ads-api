@@ -1,3 +1,4 @@
+import json
 from typing import Optional
 
 from returns.result import Failure, Success, Result
@@ -43,6 +44,7 @@ class CampaignApi(BaseWithProfileId):
                 item.dict(exclude_none=True, by_alias=True) for item in campaigns
             ]
         }
+        print(body)
         response = await self.client.post("/adsApi/v1/create/campaigns", json=body)
         if response.is_success:
             response_data = response.json()
