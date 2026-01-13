@@ -1,6 +1,6 @@
 [project]
 name = "amazon-ads-api"
-version = "0.1.1"
+version = "0.1.2"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.9"
@@ -9,13 +9,15 @@ dependencies = [
     "httpx>=0.28.1",
     "pendulum>=3.1.0",
     "pydantic[dotenv]==1.10",
-    "pytest>=8.4.2",
-    "pytest-asyncio>=1.2.0",
     "returns>=0.23.0",
 ]
 
 [dependency-groups]
-dev = ["python-dotenv>=1.2.1"]
+dev = [
+    "pytest>=8.4.2",
+    "pytest-asyncio>=1.2.0",
+    "python-dotenv>=1.2.1",
+]
 
 [tool.basedpyright]
 allowedUntypedLibraries = [
