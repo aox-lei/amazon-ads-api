@@ -2,7 +2,7 @@ from typing import Optional
 
 from returns.result import Failure, Success, Result
 
-from ads_api.base import BaseWithProfileId, CamelCaseBaseModel
+from ads_api.base import BaseWithAccountId, CamelCaseBaseModel
 import pydantic
 from typing_extensions import Literal
 from .types.enums import SPAdStateFilter
@@ -18,7 +18,7 @@ from ads_api.ads_v1.base import handle_api_errors
 from httpx import Response
 
 
-class AdsGlobalApi(BaseWithProfileId):
+class AdsGlobalApi(BaseWithAccountId):
 
     @handle_api_errors
     async def query(

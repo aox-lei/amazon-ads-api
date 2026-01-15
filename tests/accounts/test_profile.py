@@ -11,3 +11,4 @@ async def test_profile(credentials: Credentials):
     filter = ListProfileFilter()
     profiles = await profile_api.query(filter)
     print(profiles)
+
