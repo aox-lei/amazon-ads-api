@@ -21,7 +21,6 @@ from ads_api.ads_v1.sp.types.enums import (
 
 @pytest.mark.asyncio
 async def test_list(credentials: Credentials):
-    
 
     ads_client = create_ads_client(enums.Region.EU, credentials)
     api = CampaignApi(ads_client, "1797199929863809")
@@ -67,18 +66,22 @@ async def test_create(credentials: Credentials):
 
 
 @pytest.mark.asyncio
+async def test_update(credentials: Credentials):
+    ads_client = create_ads_client(enums.Region.EU, credentials)
+    campaign_update = SPCampaignUpdate(
+        campaign_id="83761549527322",
+        name="测试广告活动",
+        state=SPUpdateState.ENABLED,
+    )
+    api = CampaignApi(ads_client, "1797199929863809")
+    res = await api.update(campaigns=[campaign_update])
+    print(res)
+
+
+@pytest.mark.asyncio
 async def test_delete(credentials: Credentials):
     ads_client = create_ads_client(enums.Region.EU, credentials)
     api = CampaignApi(ads_client, "1797199929863809")
     response = await api.delete(campaign_ids=["83761549527322"])
     print(response)
 
-
-@pytest.mark.asyncio
-async def test_update(credentials: Credentials):
-    ads_client = create_ads_client(enums.Region.EU, credentials)
-    api = CampaignApi(ads_client, "1797199929863809")
-
-    body = SPCampaignUpdate(campaign_id="83761549527322", state=SPUpdateState.ENABLED)
-    response = await api.update(campaigns=[body])
-    print(response)

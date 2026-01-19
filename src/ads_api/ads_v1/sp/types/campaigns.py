@@ -390,6 +390,59 @@ class SPCampaignUpdate(CamelCaseBaseModel):
     state: Optional[SPUpdateState] = None
     tags: Optional[dict[str, str]] = None
 
+    def set_budgets(self, budget_value: float):
+        self.budgets = [
+            SPCreateBudget(
+                budget_value=SPCreateBudgetValue(
+                    monetary_budget_value=SPCreateMonetaryBudgetValue(
+                        monetary_budget=SPCreateMonetaryBudget(value=budget_value)
+                    )
+                )
+            )
+        ]
+        return self
+
+    def set_audience_bid_adjustments(self, audience_id: str, percentage: int):
+        self.optimizations = self.optimizations or SPUpdateCampaignOptimizations()
+        self.optimizations.bid_settings = (
+            self.optimizations.bid_settings or SPUpdateBidSettings()
+        )
+        self.optimizations.bid_settings.bid_adjustments = (
+            self.optimizations.bid_settings.bid_adjustments or SPUpdateBidAdjustments()
+        )
+        self.optimizations.bid_settings.bid_adjustments.audience_bid_adjustments = [
+            SPCreateAudienceBidAdjustment(
+                audience_id=audience_id, percentage=percentage
+            )
+        ]
+        return self
+
+    def add_placement_bid_adjustments(self, placement: SPPlacement, percentage: int):
+        self.optimizations = self.optimizations or SPUpdateCampaignOptimizations()
+        self.optimizations.bid_settings = (
+            self.optimizations.bid_settings or SPUpdateBidSettings()
+        )
+        self.optimizations.bid_settings.bid_adjustments = (
+            self.optimizations.bid_settings.bid_adjustments or SPUpdateBidAdjustments()
+        )
+        self.optimizations.bid_settings.bid_adjustments.placement_bid_adjustments = (
+            self.optimizations.bid_settings.bid_adjustments.placement_bid_adjustments
+            or []
+        )
+        self.optimizations.bid_settings.bid_adjustments.placement_bid_adjustments.append(
+            SPCreatePlacementBidAdjustment(placement=placement, percentage=percentage)
+        )
+        return self
+
+    def set_bid_strategy(self, bid_strategy: SPBidStrategy):
+        self.optimizations = self.optimizations or SPUpdateCampaignOptimizations()
+        self.optimizations.bid_settings = (
+            self.optimizations.bid_settings or SPUpdateBidSettings()
+        )
+        self.optimizations.bid_settings.bid_strategy = bid_strategy
+
+        return self
+
 
 # endregion
 
