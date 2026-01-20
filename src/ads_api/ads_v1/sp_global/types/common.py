@@ -68,7 +68,7 @@ class SPGlobalStatusMarketplaceSetting(CamelCaseBaseModel):
 class SPGlobalStatus(CamelCaseBaseModel):
     delivery_reasons: Optional[list[SPGlobalDeliveryReason]] = None
     delivery_status: SPDeliveryStatus
-    marketplace_settings: list[SPGlobalStatusMarketplaceSetting]
+    marketplace_settings: Optional[list[SPGlobalStatusMarketplaceSetting]] = None
 
 
 # endregion

@@ -74,6 +74,7 @@ class SPMarketplace(str, Enum):
     ES = "ES"  # 西班牙
     FR = "FR"  # 法国
     GB = "GB"  # 英国
+    UK = "GB"  # 英国
     IE = "IE"  # 爱尔兰
     IN = "IN"  # 印度
     IT = "IT"  # 意大利

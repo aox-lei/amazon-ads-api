@@ -1,3 +1,4 @@
+from enum import Enum
 from typing import Optional
 import pytest
 import asyncio
@@ -7,7 +8,11 @@ from ads_api import Region
 from datetime import datetime, timezone
 import pendulum
 
+class A(str, Enum):
+    US = "US"
+    CA = "CA"
 
 @pytest.mark.asyncio
 async def test_test():
-    print(Region.by_country_code("US"))
+    country_code = "NA"
+    print(A[country_code])

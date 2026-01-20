@@ -16,3 +16,8 @@ def credentials():
         refresh_token=os.getenv("REFRESH_TOKEN", ""),
     )
     yield credentials
+
+
+@pytest.fixture(scope="session")
+def account_id():
+    return os.getenv("ACCOUNT_ID", "")

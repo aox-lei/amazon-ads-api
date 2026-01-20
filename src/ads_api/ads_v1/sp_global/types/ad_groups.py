@@ -4,6 +4,7 @@ from typing_extensions import Literal
 from .enums import (
     SPGlobalCreateState,
     SPGlobalCurrencyCode,
+    SPGlobalCurrencyCodeByCountryCode,
     SPGlobalMarketplace,
     SPGlobalState,
 )
@@ -37,11 +38,13 @@ class SPGlobalAdGroupBid(CamelCaseBaseModel):
 
 
 class SPGlobalCreateAdGroupBid(CamelCaseBaseModel):
-    marketplace_settings: Optional[list[SPGlobalCreateAdGroupBidMarketplaceSetting]]
+    marketplace_settings: list[SPGlobalCreateAdGroupBidMarketplaceSetting] = []
 
 
 class SPGlobalUpdateAdGroupBid(CamelCaseBaseModel):
-    marketplace_settings: Optional[list[SPGlobalCreateAdGroupBidMarketplaceSetting]]
+    marketplace_settings: Optional[list[SPGlobalCreateAdGroupBidMarketplaceSetting]] = (
+        None
+    )
 
 
 # endregion
@@ -54,8 +57,8 @@ class SPGlobalMarketplaceAdGroupFieldOverrides(CamelCaseBaseModel):
 
 
 # region SPGlobalMarketplaceAdGroupConfigurations
-class SPGlobalMarketplaceAdGroupConfigurations(str, CamelCaseBaseModel):
-    ad_group_id: str
+class SPGlobalMarketplaceAdGroupConfigurations(CamelCaseBaseModel):
+    ad_group_id: Optional[str] = None
     marketplace: SPGlobalMarketplace
     overrides: SPGlobalMarketplaceAdGroupFieldOverrides
 
@@ -80,7 +83,7 @@ class SPGlobalAdGroup(CamelCaseBaseModel):
     marketplaces: list[SPGlobalMarketplace]
     name: str
     state: SPGlobalState
-    status: SPGlobalStatus
+    status: Optional[SPGlobalStatus] = None
     tags: Optional[list[SPTag]] = pydantic.Field(
         default=None, min_items=0, max_items=50
     )
@@ -109,7 +112,9 @@ class SPGlobalAdGroupCreate(CamelCaseBaseModel):
     ad_product: Literal["SPONSORED_PRODUCTS"] = "SPONSORED_PRODUCTS"
     bid: SPGlobalCreateAdGroupBid
     campaign_id: str
-    marketplace_configurations: SPGlobalCreateMarketplaceAdGroupConfigurations
+    marketplace_configurations: Optional[
+        list[SPGlobalCreateMarketplaceAdGroupConfigurations]
+    ] = None
     marketplace_scope: Literal["GLOBAL"] = "GLOBAL"
     marketplaces: list[SPGlobalMarketplace]
     name: str
@@ -117,6 +122,69 @@ class SPGlobalAdGroupCreate(CamelCaseBaseModel):
     tags: Optional[list[SPGlobalCreateTag]] = pydantic.Field(
         default=None, min_items=0, max_items=50
     )
+
+    @classmethod
+    def build(cls, campaign_id: str, name: str, country_codes: list[str]):
+        marketplaces = [
+            SPGlobalMarketplace[country_code] for country_code in country_codes
+        ]
+        return cls(
+            bid=SPGlobalCreateAdGroupBid(),
+            campaign_id=campaign_id,
+            name=name,
+            marketplaces=marketplaces,
+            state=SPGlobalCreateState.ENABLED,
+        )
+
+    def set_bid(
+        self, default_bid: float, country_code: str, currency_code: Optional[str] = None
+    ):
+        marketplace = SPGlobalMarketplace[country_code]
+        if currency_code is None:
+            currency_code = SPGlobalCurrencyCodeByCountryCode[country_code].value
+        else:
+            currency_code = SPGlobalCurrencyCode[currency_code]
+        self.bid.marketplace_settings.append(
+            SPGlobalCreateAdGroupBidMarketplaceSetting(
+                currency_code=currency_code,
+                default_bid=default_bid,
+                marketplace=marketplace,
+            )
+        )
+        return self
+
+    def set_marketplace_configuration(
+        self,
+        country_code: str,
+        *,
+        name: Optional[str] = None,
+        state: Optional[SPGlobalState] = None,
+        tags: Optional[dict[str, str]] = None,
+    ):
+        self.marketplace_configurations = self.marketplace_configurations or []
+        self.marketplace_configurations.append(
+            SPGlobalCreateMarketplaceAdGroupConfigurations(
+                marketplace=SPGlobalMarketplace[country_code],
+                overrides=SPGlobalCreateMarketplaceAdGroupFieldOverrides(
+                    name=name,
+                    state=state,
+                    tags=(
+                        [
+                            SPGlobalCreateTag(key=key, value=value)
+                            for key, value in tags.items()
+                        ]
+                        if tags
+                        else None
+                    ),
+                ),
+            )
+        )
+        return self
+
+    def set_tag(self, key: str, value: str):
+        self.tags = self.tags or []
+        self.tags.append(SPGlobalCreateTag(key=key, value=value))
+        return self
 
 
 # endregion
@@ -135,6 +203,66 @@ class SPGlobalAdGroupUpdate(CamelCaseBaseModel):
     tags: Optional[list[SPGlobalCreateTag]] = pydantic.Field(
         default=None, min_items=0, max_items=50
     )
+
+    @classmethod
+    def build(cls, ad_group_id: str):
+        return cls(ad_group_id=ad_group_id)
+
+    def set_bid(
+        self, default_bid: float, country_code: str, currency_code: Optional[str] = None
+    ):
+        self.bid = self.bid or SPGlobalUpdateAdGroupBid(marketplace_settings=[])
+        self.bid.marketplace_settings = self.bid.marketplace_settings or []
+        marketplace = SPGlobalMarketplace[country_code]
+        if currency_code is None:
+            currency_code = SPGlobalCurrencyCodeByCountryCode[country_code].value
+        else:
+            currency_code = SPGlobalCurrencyCode[currency_code]
+        self.bid.marketplace_settings.append(
+            SPGlobalCreateAdGroupBidMarketplaceSetting(
+                currency_code=currency_code,
+                default_bid=default_bid,
+                marketplace=marketplace,
+            )
+        )
+        return self
+
+    def set_marketplace_configuration(
+        self,
+        country_code: str,
+        *,
+        name: Optional[str] = None,
+        state: Optional[SPGlobalState] = None,
+        tags: Optional[dict[str, str]] = None,
+    ):
+        self.marketplace_configurations = self.marketplace_configurations or []
+        self.marketplace_configurations.append(
+            SPGlobalCreateMarketplaceAdGroupConfigurations(
+                marketplace=SPGlobalMarketplace[country_code],
+                overrides=SPGlobalCreateMarketplaceAdGroupFieldOverrides(
+                    name=name,
+                    state=state,
+                    tags=(
+                        [
+                            SPGlobalCreateTag(key=key, value=value)
+                            for key, value in tags.items()
+                        ]
+                        if tags
+                        else None
+                    ),
+                ),
+            )
+        )
+        return self
+
+    def set_tag(self, key: str, value: str):
+        self.tags = self.tags or []
+        self.tags.append(SPGlobalCreateTag(key=key, value=value))
+        return self
+
+    def set_state(self, state: SPGlobalUpdateState):
+        self.state = state
+        return self
 
 
 # endregion

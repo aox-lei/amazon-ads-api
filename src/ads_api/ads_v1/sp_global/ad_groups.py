@@ -1,7 +1,7 @@
 from typing import Optional
 import pydantic
 from typing_extensions import Literal
-from types.common import ErrorsIndex
+from .types.common import ErrorsIndex
 from ads_api.base import BaseWithAccountId, CamelCaseBaseModel
 from returns.result import Result, Success, Failure
 from .types.enums import SPGlobalAdGroupStateFilter
@@ -10,10 +10,17 @@ from .types.ad_groups import (
     SPGlobalAdGroupCreate,
     SPGlobalAdGroupPartialIndex,
     SPGlobalAdGroupMultiStatusSuccess,
-    SPGlobalAdGroupUpdate
+    SPGlobalAdGroupUpdate,
 )
 from ads_api.ads_v1.base import handle_api_errors
 from httpx import Response
+
+__all__ = [
+    "SPGlobalAdGroupCreate",
+    "SPGlobalAdGroupUpdate",
+    "AdGroupsGlobalApi",
+    "ListGlobalAdGroupFilter",
+]
 
 
 class AdGroupsGlobalApi(BaseWithAccountId):
@@ -27,7 +34,6 @@ class AdGroupsGlobalApi(BaseWithAccountId):
             response_data = response.json()
             return Success(ListGlobalAdGroupsGlobalResponse(**response_data))
         return Failure(response)
-        
 
     @handle_api_errors
     async def create(
@@ -55,7 +61,6 @@ class AdGroupsGlobalApi(BaseWithAccountId):
             return Success(OperationGlobalAdGroupResponse(**response_data))
         return Failure(response)
 
-
     @handle_api_errors
     async def update(
         self, ad_groups: list[SPGlobalAdGroupUpdate]
@@ -76,7 +81,7 @@ class AdGroupsGlobalApi(BaseWithAccountId):
 class ListGlobalAdGroupFilter(CamelCaseBaseModel):
     ad_product_filter: list[Literal["SPONSORED_PRODUCTS"]] = ["SPONSORED_PRODUCTS"]
     campaign_id_filter: Optional[list[str]] = None
-    marketplace_scope_filter: Optional[list[Literal["GLOBAL"]]] = None
+    marketplace_scope_filter: list[Literal["GLOBAL"]] = ["GLOBAL"]
     max_results: int = 1000
     name_filter: Optional[list[str]] = pydantic.Field(
         default=None, min_items=0, max_items=100
@@ -91,7 +96,7 @@ class ListGlobalAdGroupFilter(CamelCaseBaseModel):
     def to_body(self, next_token: Optional[str] = None):
         body = self.dict(exclude_none=True, by_alias=True)
         body["adProductFilter"] = {"include": self.ad_product_filter}
-
+        body["marketplaceScopeFilter"] = {"include": self.marketplace_scope_filter}
         if self.campaign_id_filter is not None:
             body["campaignIdFilter"] = {"include": self.campaign_id_filter}
         if self.name_filter is not None:

@@ -32,7 +32,31 @@ class SPGlobalCurrencyCode(str, Enum):
     TRY = "TRY"
     USD = "USD"
     ZAR = "ZAR"
-
+    
+class SPGlobalCurrencyCodeByCountryCode(Enum):
+    AE = SPGlobalCurrencyCode.AED
+    AU = SPGlobalCurrencyCode.AUD
+    BE = SPGlobalCurrencyCode.EUR  # 比利时使用欧元
+    BR = SPGlobalCurrencyCode.BRL
+    CA = SPGlobalCurrencyCode.CAD
+    DE = SPGlobalCurrencyCode.EUR  # 德国使用欧元
+    EG = SPGlobalCurrencyCode.EGP
+    ES = SPGlobalCurrencyCode.EUR  # 西班牙使用欧元
+    FR = SPGlobalCurrencyCode.EUR  # 法国使用欧元
+    GB = SPGlobalCurrencyCode.GBP
+    UK = SPGlobalCurrencyCode.GBP
+    IN = SPGlobalCurrencyCode.INR
+    IT = SPGlobalCurrencyCode.EUR  # 意大利使用欧元
+    JP = SPGlobalCurrencyCode.JPY
+    MX = SPGlobalCurrencyCode.MXN  # 墨西哥使用墨西哥比索
+    NL = SPGlobalCurrencyCode.EUR  # 荷兰使用欧元
+    PL = SPGlobalCurrencyCode.PLN
+    SA = SPGlobalCurrencyCode.SAR  # 沙特阿拉伯使用沙特里亚尔
+    SE = SPGlobalCurrencyCode.SEK
+    SG = SPGlobalCurrencyCode.SGD
+    TR = SPGlobalCurrencyCode.TRY
+    US = SPGlobalCurrencyCode.USD
+    ZA = SPGlobalCurrencyCode.ZAR  # 南非使用南非兰特
 
 
 class SPGlobalCountryCode(str, Enum):
@@ -58,6 +82,7 @@ class SPGlobalCountryCode(str, Enum):
     TR = "TR"
     US = "US"
 
+
 class SPGlobalMarketplace(str, Enum):
     AE = "AE"
     AU = "AU"
@@ -69,6 +94,7 @@ class SPGlobalMarketplace(str, Enum):
     ES = "ES"
     FR = "FR"
     GB = "GB"
+    UK = "GB"
     IN = "IN"
     IT = "IT"
     JP = "JP"
@@ -80,7 +106,6 @@ class SPGlobalMarketplace(str, Enum):
     SG = "SG"
     TR = "TR"
     US = "US"
-
 
 
 class SPGlobalBidStrategy(str, Enum):
@@ -100,8 +125,6 @@ class SPGlobalPlacement(str, Enum):
 
 
 # endregion
-
-
 
 
 # region 网站限制
@@ -128,6 +151,7 @@ class SPGlobalCreateState(str, Enum):
 class SPGlobalUpdateState(str, Enum):
     ENABLED = "ENABLED"  # 活动
     PAUSED = "PAUSED"  # 暂停
+    ENABLING="ENABLING"
 
 
 # endregion
@@ -309,4 +333,3 @@ class SPAdStateFilter(str, Enum):
 
 
 # endregion
-

@@ -15,6 +15,13 @@ from .types.common import ErrorsIndex
 from ads_api.ads_v1.base import handle_api_errors
 from httpx import Response
 
+__all__ = [
+    "SPGlobalCampaignCreate",
+    "SPGlobalCampaignUpdate",
+    "CampaginGlobalApi",
+    "ListGlobalCampaignFilter",
+]
+
 
 class CampaginGlobalApi(BaseWithAccountId):
 
@@ -81,7 +88,7 @@ class ListGlobalCampaignFilter(CamelCaseBaseModel):
     campaign_id_filter: Optional[list[str]] = pydantic.Field(
         default=None, min_items=0, max_items=1000
     )
-    marketplaces_scope_filter: list[Literal["GLOBAL"]] = ["GLOBAL"]
+    marketplace_scope_filter: list[Literal["GLOBAL"]] = ["GLOBAL"]
     max_results: int = 1000
     name_filter: Optional[list[str]] = pydantic.Field(
         default=None, min_items=0, max_items=100
@@ -98,7 +105,7 @@ class ListGlobalCampaignFilter(CamelCaseBaseModel):
 
     def to_body(self, next_token: Optional[str] = None):
         body = self.dict(exclude_none=True, by_alias=True)
-        body["marketplaceScopeFilter"] = {"include": self.marketplaces_scope_filter}
+        body["marketplaceScopeFilter"] = {"include": self.marketplace_scope_filter}
         if self.ad_product_filter is not None:
             body["adProductFilter"] = {"include": self.ad_product_filter}
         if self.campaign_id_filter is not None:
