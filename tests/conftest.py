@@ -21,3 +21,8 @@ def credentials():
 @pytest.fixture(scope="session")
 def account_id():
     return os.getenv("ACCOUNT_ID", "")
+
+
+@pytest.fixture(scope="session")
+def profile_id():
+    return os.getenv("PROFILE_ID", "")

@@ -1,4 +1,3 @@
-import json
 from typing import Optional
 
 from returns.result import Failure, Success, Result
@@ -16,7 +15,13 @@ from .types.enums import SPCampaignStateFilter
 from ads_api.ads_v1.base import handle_api_errors
 from httpx import Response
 
-__all__ = ["CampaignApi", "ListCampaignFilter", "SPCampaignStateFilter"]
+__all__ = [
+    "CampaignApi",
+    "ListCampaignFilter",
+    "SPCampaignStateFilter",
+    "SPCampaignCreate",
+    "SPCampaignUpdate",
+]
 
 
 # region CampaignApi
@@ -44,7 +49,6 @@ class CampaignApi(BaseWithProfileId):
                 item.dict(exclude_none=True, by_alias=True) for item in campaigns
             ]
         }
-        print(body)
         response = await self.client.post("/adsApi/v1/create/campaigns", json=body)
         if response.is_success:
             response_data = response.json()

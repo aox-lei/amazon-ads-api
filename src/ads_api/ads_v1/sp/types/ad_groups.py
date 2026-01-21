@@ -41,7 +41,7 @@ class SPAdGroup(CamelCaseBaseModel):
     marketplaces: list[SPMarketplace]
     name: str
     state: SPState
-    status: SPStatus
+    status: Optional[SPStatus] = None
     tags: Optional[list[SPTag]] = pydantic.Field(
         default=None, min_items=0, max_items=50
     )
@@ -56,10 +56,26 @@ class SPAdGroupCreate(CamelCaseBaseModel):
     bid: SPCreateAdGroupBid
     campaign_id: str
     name: str
-    state: SPCreateState
+    state: SPCreateState = SPCreateState.ENABLED
     tags: Optional[list[SPCreateTag]] = pydantic.Field(
         default=None, min_items=0, max_items=50
     )
+
+    @classmethod
+    def build(cls, campaign_id: str, name: str, default_bid: float):
+        return cls(
+            campaign_id=campaign_id,
+            name=name,
+            bid=SPCreateAdGroupBid(default_bid=default_bid),
+        )
+
+    def set_state(self, state: SPCreateState):
+        self.state = state
+        return self
+
+    def set_tags(self, tags: dict[str, str]):
+        self.tags = [SPCreateTag(key=key, value=value) for key, value in tags.items()]
+        return self
 
 
 # endregion
@@ -68,11 +84,27 @@ class SPAdGroupCreate(CamelCaseBaseModel):
 # region Update
 class SPAdGroupUpdate(CamelCaseBaseModel):
     ad_group_id: str
-    bid: SPUpdateAdGroupBid
-    state: SPUpdateState
+    bid: Optional[SPUpdateAdGroupBid] = None
+    state: Optional[SPUpdateState] = None
     tags: Optional[list[SPCreateTag]] = pydantic.Field(
         default=None, min_items=0, max_items=50
     )
+
+    @classmethod
+    def build(cls, ad_group_id: str):
+        return cls(ad_group_id=ad_group_id)
+
+    def set_default_bid(self, default_bid: float):
+        self.bid = SPUpdateAdGroupBid(default_bid=default_bid)
+        return self
+
+    def set_state(self, state: SPUpdateState):
+        self.state = state
+        return self
+
+    def set_tags(self, tags: dict[str, str]):
+        self.tags = [SPCreateTag(key=key, value=value) for key, value in tags.items()]
+        return self
 
 
 # endregion

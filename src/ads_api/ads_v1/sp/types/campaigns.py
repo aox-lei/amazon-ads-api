@@ -296,80 +296,102 @@ class SPCampaignCreate(CamelCaseBaseModel):
         default_factory=lambda: datetime.now(timezone.utc), alias="startDateTime"
     )
     state: SPCreateState = SPCreateState.ENABLED
-    tags: Optional[SPCreateTag] = None
+    tags: Optional[list[SPCreateTag]] = None
 
     @pydantic.validator("start_datetime", always=True)  # type:ignore
     def validate_starttime(cls, v: datetime):
         return pendulum.instance(v).format("YYYY-MM-DDTHH:mm:ss[Z]")
 
-    @staticmethod
-    def create_auto_creation_settings(
-        auto_create_targets: bool = True, auto_manage_campaign: Optional[bool] = None
+    @classmethod
+    def build(cls, name: str, budget_value: float, country_code: str):
+        return cls(
+            name=name,
+            auto_creation_settings=SPCreateAutoCreationSettings(
+                auto_create_targets=True, auto_manage_campaign=None
+            ),
+            budgets=[
+                SPCreateBudget(
+                    budget_value=SPCreateBudgetValue(
+                        monetary_budget_value=SPCreateMonetaryBudgetValue(
+                            monetary_budget=SPCreateMonetaryBudget(value=budget_value)
+                        )
+                    )
+                )
+            ],
+            countries=[SPCountryCode[country_code]],
+            marketplaces=[SPMarketplace[country_code]],
+        )
+
+    def set_creation_settings(
+        self,
+        auto_create_targets: bool = True,
+        auto_manage_campaign: Optional[bool] = None,
     ):
-        return SPCreateAutoCreationSettings(
+        self.auto_creation_settings = SPCreateAutoCreationSettings(
             auto_create_targets=auto_create_targets,
             auto_manage_campaign=auto_manage_campaign,
         )
+        return self
 
-    @staticmethod
-    def create_budgets(budget_value: float) -> list[SPCreateBudget]:
-        """设置预算值"""
-        return [
-            SPCreateBudget(
-                budget_value=SPCreateBudgetValue(
-                    monetary_budget_value=SPCreateMonetaryBudgetValue(
-                        monetary_budget=SPCreateMonetaryBudget(value=budget_value)
-                    )
-                )
-            )
-        ]
+    def set_end_datetime(self, end_datetime: datetime):
+        self.end_datetime = end_datetime
+        return self
 
-    @staticmethod
-    def create_optimizations(
-        bid_settings: Optional[SPCreateBidSettings] = None,
-        budget_settings: Optional[SPCreateBudgetSettings] = None,
-    ):
-        return SPCreateCampaignOptimizations(
-            bid_settings=bid_settings, budget_settings=budget_settings
+    def set_audience_bid_adjustments(self, audience: dict[str, int]):
+        self.optimizations = self.optimizations or SPCreateCampaignOptimizations()
+        self.optimizations.bid_settings = (
+            self.optimizations.bid_settings or SPCreateBidSettings()
         )
-
-    @staticmethod
-    def create_bid_settings(
-        audience_adjustment: Optional[list[SPCreateAudienceBidAdjustment]],
-        placement_adjustment: Optional[list[SPCreatePlacementBidAdjustment]] = None,
-        bid_strategy: Optional[SPBidStrategy] = None,
-    ):
-        return SPCreateBidSettings(
-            bid_adjustments=SPCreateBidAdjustments(
-                audience_bid_adjustments=audience_adjustment,
-                placement_bid_adjustments=placement_adjustment,
-            ),
-            bid_strategy=bid_strategy,
+        self.optimizations.bid_settings.bid_adjustments = (
+            self.optimizations.bid_settings.bid_adjustments or SPCreateBidAdjustments()
         )
-
-    @staticmethod
-    def create_budget_settings(
-        off_amazon_budget_control_strategy: Optional[
-            SPOffAmazonBudgetControlStrategy
-        ] = None,
-    ):
-        return SPCreateBudgetSettings(
-            off_amazon_budget_control_strategy=off_amazon_budget_control_strategy
-        )
-
-    @staticmethod
-    def create_audience_adjustment(audience_id: str, percentage: int):
-        return [
+        self.optimizations.bid_settings.bid_adjustments.audience_bid_adjustments = [
             SPCreateAudienceBidAdjustment(
                 audience_id=audience_id, percentage=percentage
             )
+            for audience_id, percentage in audience.items()
         ]
+        return self
 
-    @staticmethod
-    def create_placement_adjustment(placement: SPPlacement, percentage: int):
-        return SPCreatePlacementBidAdjustment(
-            placement=placement, percentage=percentage
+    def set_placement_bid_adjustments(self, placement: dict[SPPlacement, int]):
+        self.optimizations = self.optimizations or SPCreateCampaignOptimizations()
+        self.optimizations.bid_settings = (
+            self.optimizations.bid_settings or SPCreateBidSettings()
         )
+        self.optimizations.bid_settings.bid_adjustments = (
+            self.optimizations.bid_settings.bid_adjustments or SPCreateBidAdjustments()
+        )
+        self.optimizations.bid_settings.bid_adjustments.placement_bid_adjustments = [
+            SPCreatePlacementBidAdjustment(placement=placement, percentage=percentage)
+            for placement, percentage in placement.items()
+        ]
+        return self
+
+    def set_bid_strategy(self, bid_strategy: SPBidStrategy):
+        self.optimizations = self.optimizations or SPCreateCampaignOptimizations()
+        self.optimizations.bid_settings = (
+            self.optimizations.bid_settings or SPCreateBidSettings()
+        )
+        self.optimizations.bid_settings.bid_strategy = bid_strategy
+        return self
+
+    def set_budget_settings(
+        self, off_amazon_budget_control_strategy: SPOffAmazonBudgetControlStrategy
+    ):
+        self.optimizations = self.optimizations or SPCreateCampaignOptimizations()
+        self.optimizations.budget_settings = SPCreateBudgetSettings(
+            off_amazon_budget_control_strategy=off_amazon_budget_control_strategy
+        )
+        return self
+
+    def set_state(self, state: SPCreateState):
+        self.state = state
+        return self
+
+    def set_tags(self, tags: dict[str, str]):
+        self.tags = self.tags or []
+        self.tags = [SPCreateTag(key=key, value=value) for key, value in tags.items()]
+        return self
 
 
 # endregion
@@ -388,21 +410,17 @@ class SPCampaignUpdate(CamelCaseBaseModel):
         default=None, alias="startDateTime"
     )
     state: Optional[SPUpdateState] = None
-    tags: Optional[dict[str, str]] = None
+    tags: Optional[list[SPCreateTag]] = None
 
-    def set_budgets(self, budget_value: float):
-        self.budgets = [
-            SPCreateBudget(
-                budget_value=SPCreateBudgetValue(
-                    monetary_budget_value=SPCreateMonetaryBudgetValue(
-                        monetary_budget=SPCreateMonetaryBudget(value=budget_value)
-                    )
-                )
-            )
-        ]
+    @classmethod
+    def build(cls, campaign_id: str, name: Optional[str] = None):
+        return cls(campaign_id=campaign_id, name=name)
+
+    def set_end_datetime(self, end_datetime: datetime):
+        self.end_datetime = end_datetime
         return self
 
-    def set_audience_bid_adjustments(self, audience_id: str, percentage: int):
+    def set_audience_bid_adjustments(self, audience: dict[str, int]):
         self.optimizations = self.optimizations or SPUpdateCampaignOptimizations()
         self.optimizations.bid_settings = (
             self.optimizations.bid_settings or SPUpdateBidSettings()
@@ -414,10 +432,11 @@ class SPCampaignUpdate(CamelCaseBaseModel):
             SPCreateAudienceBidAdjustment(
                 audience_id=audience_id, percentage=percentage
             )
+            for audience_id, percentage in audience.items()
         ]
         return self
 
-    def add_placement_bid_adjustments(self, placement: SPPlacement, percentage: int):
+    def set_placement_bid_adjustments(self, placement: dict[SPPlacement, int]):
         self.optimizations = self.optimizations or SPUpdateCampaignOptimizations()
         self.optimizations.bid_settings = (
             self.optimizations.bid_settings or SPUpdateBidSettings()
@@ -425,13 +444,10 @@ class SPCampaignUpdate(CamelCaseBaseModel):
         self.optimizations.bid_settings.bid_adjustments = (
             self.optimizations.bid_settings.bid_adjustments or SPUpdateBidAdjustments()
         )
-        self.optimizations.bid_settings.bid_adjustments.placement_bid_adjustments = (
-            self.optimizations.bid_settings.bid_adjustments.placement_bid_adjustments
-            or []
-        )
-        self.optimizations.bid_settings.bid_adjustments.placement_bid_adjustments.append(
+        self.optimizations.bid_settings.bid_adjustments.placement_bid_adjustments = [
             SPCreatePlacementBidAdjustment(placement=placement, percentage=percentage)
-        )
+            for placement, percentage in placement.items()
+        ]
         return self
 
     def set_bid_strategy(self, bid_strategy: SPBidStrategy):
@@ -440,7 +456,24 @@ class SPCampaignUpdate(CamelCaseBaseModel):
             self.optimizations.bid_settings or SPUpdateBidSettings()
         )
         self.optimizations.bid_settings.bid_strategy = bid_strategy
+        return self
 
+    def set_budget_settings(
+        self, off_amazon_budget_control_strategy: SPOffAmazonBudgetControlStrategy
+    ):
+        self.optimizations = self.optimizations or SPUpdateCampaignOptimizations()
+        self.optimizations.budget_settings = SPUpdateBudgetSettings(
+            off_amazon_budget_control_strategy=off_amazon_budget_control_strategy
+        )
+        return self
+
+    def set_state(self, state: SPUpdateState):
+        self.state = state
+        return self
+
+    def set_tags(self, tags: dict[str, str]):
+        self.tags = self.tags or []
+        self.tags = [SPCreateTag(key=key, value=value) for key, value in tags.items()]
         return self
 
 
