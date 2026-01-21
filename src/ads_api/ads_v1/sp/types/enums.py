@@ -340,7 +340,7 @@ class AdProduct(str, Enum):
     AMAZON_DSP = "AMAZON_DSP"
 
 
-class MatchType(str, Enum):
+class SPMatchType(str, Enum):
     # --- 传统关键词匹配 (Keyword Match Types) ---
     BROAD = "BROAD"  # 广泛匹配：包含关键词、同义词或相关词汇
     PHRASE = "PHRASE"  # 短语匹配：包含精确短语或其紧密变体

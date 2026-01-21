@@ -4,21 +4,16 @@ from ads_api.ads_v1.sp.targets import (
     TargetApi,
     ListTargetFilter,
 )
-from ads_api.ads_v1.sp.types.enums import SPTargetType
+from ads_api.ads_v1.sp.types.enums import SPMatchType, SPTargetType
 from ads_api import Credentials, enums, create_ads_client
-from returns.pipeline import is_successful
-from pprint import pprint as print
+from rich import inspect
 
 
 @pytest.mark.asyncio
-async def test_list(credentials: Credentials):
+async def test_query(credentials: Credentials, profile_id: str):
     ads_client = create_ads_client(enums.Region.EU, credentials)
-    api = TargetApi(ads_client, "1797199929863809")
-    filter = ListTargetFilter()
+    api = TargetApi(ads_client, profile_id)
+    filter = ListTargetFilter(match_type_filter=[SPMatchType.BROAD], keyword_filter=["apple"], keyword_filter_query_term_match_type="EXACT_MATCH")
 
     data = await api.query(filter)
-    if not is_successful(data):
-        print(data.failure())
-        return
-    data = data.unwrap()
-    print(data.dict())
+    inspect(data.unwrap())
