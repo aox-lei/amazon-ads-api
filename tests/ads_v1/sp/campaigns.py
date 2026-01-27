@@ -21,11 +21,11 @@ from rich import inspect
 
 
 @pytest.mark.asyncio
-async def test_list(credentials: Credentials):
+async def test_query(credentials: Credentials):
 
     ads_client = create_ads_client(enums.Region.EU, credentials)
     api = CampaignApi(ads_client, "1797199929863809")
-    filter = ListCampaignFilter(state_filter=[SPCampaignStateFilter.ENABLED])
+    filter = ListCampaignFilter(campaign_id_filter=["5000089669971167240"])
 
     data = await api.query(filter)
     if not is_successful(data):

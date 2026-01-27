@@ -23,7 +23,7 @@ async def test_query(credentials: Credentials, account_id: str):
     api = CampaginGlobalApi(ads_client, account_id)
     filter = ListGlobalCampaignFilter()
     res = await api.query(filter)
-    inspect(res)
+    inspect(res.unwrap())
 
 
 @pytest.mark.asyncio

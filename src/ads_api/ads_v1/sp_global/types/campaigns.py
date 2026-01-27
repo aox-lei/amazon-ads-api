@@ -152,7 +152,7 @@ class SPGlobalCampaign(CamelCaseBaseModel):
     # 活动开始时间
     start_datetime: datetime = pydantic.Field(default=..., alias="startDateTime")
     state: SPGlobalState  # 状态
-    status: Optional[SPGlobalStatus] = None # 状态
+    status: Optional[SPGlobalStatus] = None  # 状态
     # 开放式标签, 自定义
     tags: Optional[list[SPGlobalTag]] = pydantic.Field(default=None, max_items=50)
 
@@ -285,14 +285,16 @@ class SPGlobalCampaignCreate(CamelCaseBaseModel):
     @classmethod
     def build_marketplace_optimizations(
         cls,
-        bid_adjustments: dict[SPGlobalPlacement, int],
-        bid_strategy: SPGlobalBidStrategy,
+        bid_adjustments: Optional[dict[SPGlobalPlacement, int]] = None,
+        bid_strategy: Optional[SPGlobalBidStrategy] = None,
     ):
         """构建marketplace_configuration中的optimizations"""
-        placement_bid_adjustments = [
-            SPGlobalCreatePlacementBidAdjustment(placement=key, percentage=value)
-            for key, value in bid_adjustments.items()
-        ]
+        placement_bid_adjustments = None
+        if bid_adjustments is not None:
+            placement_bid_adjustments = [
+                SPGlobalCreatePlacementBidAdjustment(placement=key, percentage=value)
+                for key, value in bid_adjustments.items()
+            ]
         return SPGlobalCreateCampaignOptimizations(
             bid_settings=SPGlobalCreateBidSettings(
                 bid_adjustments=SPGlobalCreateBidAdjustments(
