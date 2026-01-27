@@ -58,7 +58,7 @@ class SPGlobalMarketplaceAdGroupFieldOverrides(CamelCaseBaseModel):
 
 # region SPGlobalMarketplaceAdGroupConfigurations
 class SPGlobalMarketplaceAdGroupConfigurations(CamelCaseBaseModel):
-    ad_group_id: Optional[str] = None
+    ad_group_id: str
     marketplace: SPGlobalMarketplace
     overrides: SPGlobalMarketplaceAdGroupFieldOverrides
 
