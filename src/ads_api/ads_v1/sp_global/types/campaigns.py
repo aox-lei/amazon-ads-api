@@ -121,12 +121,31 @@ class SPGlobalCreateAutoCreationSettings(CamelCaseBaseModel):
 
 # endregion
 
+
 # region SPGlobalCampaign
+class SPGlobalCampaignOptimizations(CamelCaseBaseModel):
+    bid_settings: Optional[SPGlobalBidSettings] = None
+class SPGlobalMarketplaceCampaignFieldOverrides(CamelCaseBaseModel):
+    end_datetime: Optional[datetime] = pydantic.Field(default=None, alias="endDateTime")
+    name: Optional[str] = None
+    optimizations: Optional[SPGlobalCampaignOptimizations] = None
+    start_datetime: Optional[datetime] = pydantic.Field(
+        default=None, alias="startDateTime"
+    )
+    state: Optional[SPGlobalState] = None
+    tags: Optional[list[SPGlobalCreateTag]] = pydantic.Field(default=None, max_items=50)
+
+
+class SPGlobalMarketplaceCampaignConfigurations(CamelCaseBaseModel):
+    campaign_id: str
+    marketplace: SPGlobalMarketplace
+    overrides: SPGlobalMarketplaceCampaignFieldOverrides
 
 
 class SPGlobalCampaign(CamelCaseBaseModel):
     ad_product: Literal["SPONSORED_PRODUCTS"]
     auto_creation_settings: SPGlobalAutoCreationSettings
+    auto_scale_global_campaign: Optional[Literal["AUTO", "MANUAL"]] = None
     budgets: list[SPGlobalBudget]  # 预算
     campaign_id: str  # 活动编号
     countries: Optional[list[SPGlobalCountryCode]] = pydantic.Field(
@@ -136,12 +155,14 @@ class SPGlobalCampaign(CamelCaseBaseModel):
     creation_datetime: datetime = pydantic.Field(default=..., alias="creationDateTime")
     # 结束时间
     end_datetime: Optional[datetime] = pydantic.Field(default=None, alias="endDateTime")
-    global_campaign_id: Optional[str] = None  # 全球活动编号
     # 上次更新日期
     last_updated_datetime: datetime = pydantic.Field(
         default=..., alias="lastUpdatedDateTime"
     )
     marketplace_scope: Literal["GLOBAL"]  # 市场范围
+    marketplace_configurations: Optional[
+        list[SPGlobalMarketplaceCampaignConfigurations]
+    ] = pydantic.Field(default=None, min_items=0, max_items=30)
     marketplaces: Optional[list[SPGlobalMarketplace]] = pydantic.Field(
         default=None, min_items=0, max_items=30
     )
