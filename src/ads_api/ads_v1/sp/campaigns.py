@@ -21,6 +21,7 @@ __all__ = [
     "SPCampaignStateFilter",
     "SPCampaignCreate",
     "SPCampaignUpdate",
+    "SPCampaign"
 ]
 
 

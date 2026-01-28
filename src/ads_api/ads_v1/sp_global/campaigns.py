@@ -21,6 +21,7 @@ __all__ = [
     "SPGlobalCampaignUpdate",
     "CampaginGlobalApi",
     "ListGlobalCampaignFilter",
+    "SPGlobalCampaign"
 ]
 
 
