@@ -15,7 +15,7 @@ from ads_api.ads_v1.sp_global.types.enums import SPGlobalUpdateState
 async def test_query(credentials: Credentials, account_id: str):
     ads_client = create_ads_client(Region.EU, credentials)
     api = AdGroupsGlobalApi(ads_client, account_id)
-    filter = ListGlobalAdGroupFilter()
+    filter = ListGlobalAdGroupFilter(campaign_id_filter=["4999846175555759136"])
     res = await api.query(filter)
     inspect(res.unwrap())
 
