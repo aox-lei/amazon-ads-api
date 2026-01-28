@@ -14,6 +14,7 @@ from .types.campaigns import (
 from .types.common import ErrorsIndex
 from ads_api.ads_v1.base import handle_api_errors
 from httpx import Response
+import orjson as json
 
 __all__ = [
     "SPGlobalCampaignCreate",
@@ -47,7 +48,11 @@ class CampaginGlobalApi(BaseWithAccountId):
                 item.dict(exclude_none=True, by_alias=True) for item in campaigns
             ]
         }
-        response = await self.client.post("/adsApi/v1/create/campaigns", json=body)
+        response = await self.client.post(
+            "/adsApi/v1/create/campaigns",
+            content=json.dumps(body),
+            headers={"Content-Type": "application/json"},
+        )
         if response.is_success:
             response_data = response.json()
             return Success(OperationGlobalCampaignResponse(**response_data))

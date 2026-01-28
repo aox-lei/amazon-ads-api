@@ -1,12 +1,13 @@
 [project]
 name = "amazon-ads-api"
-version = "0.2.0"
+version = "0.2.1"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.9"
 dependencies = [
     "cachetools>=6.2.4",
     "httpx>=0.28.1",
+    "orjson>=3.11.5",
     "pendulum>=3.1.0",
     "pydantic[dotenv]==1.10",
     "returns>=0.23.0",
