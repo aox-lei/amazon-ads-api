@@ -137,7 +137,7 @@ class SPGlobalMarketplaceCampaignFieldOverrides(CamelCaseBaseModel):
 
 
 class SPGlobalMarketplaceCampaignConfigurations(CamelCaseBaseModel):
-    campaign_id: str
+    campaign_id: Optional[str] = None
     marketplace: SPGlobalMarketplace
     overrides: SPGlobalMarketplaceCampaignFieldOverrides
 
