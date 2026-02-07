@@ -25,7 +25,7 @@ async def test_query(credentials: Credentials):
 
     ads_client = create_ads_client(enums.Region.EU, credentials)
     api = CampaignApi(ads_client, "1797199929863809")
-    filter = ListCampaignFilter(campaign_id_filter=["5000089669971167240"])
+    filter = ListCampaignFilter()
 
     data = await api.query(filter)
     if not is_successful(data):

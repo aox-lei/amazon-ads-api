@@ -261,7 +261,7 @@ class SPCampaign(CamelCaseBaseModel):
     name: str  # 活动名称
     optimizations: Optional[SPCampaignOptimizations] = None  # 优化
     protfolio_id: Optional[str] = None  # 组合编号
-    site_restrictions: Optional[SPSiteRestriction] = None  # 网站限制
+    site_restrictions: Optional[list[SPSiteRestriction]] = None  # 网站限制
     # 活动开始时间
     start_datetime: datetime = pydantic.Field(default=..., alias="startDateTime")
     state: SPState  # 状态
