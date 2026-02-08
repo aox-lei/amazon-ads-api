@@ -49,13 +49,9 @@ async def test_create(credentials: Credentials):
 @pytest.mark.asyncio
 async def test_update(credentials: Credentials):
     ads_client = create_ads_client(enums.Region.EU, credentials)
-    campaign_update = SPCampaignUpdate.build("264982843807609", "测试广告活动UK")
+    campaign_update = SPCampaignUpdate.build("188369444709764")
     _ = campaign_update.set_state(SPUpdateState.PAUSED)
-    _ = campaign_update.set_budget_settings(
-        SPOffAmazonBudgetControlStrategy.MAXIMIZE_REACH
-    )
-    _ = campaign_update.set_tags({"tag1": "tag1"})
-    api = CampaignApi(ads_client, "1797199929863809")
+    api = CampaignApi(ads_client, "1349510253315695")
     res = await api.update(campaigns=[campaign_update])
     inspect(res.unwrap())
 

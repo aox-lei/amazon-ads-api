@@ -57,7 +57,8 @@ async def test_update(credentials: Credentials, account_id: str):
     ads_client = create_ads_client(enums.Region.EU, credentials)
     api = CampaginGlobalApi(ads_client, account_id)
 
-    campaign_body = SPGlobalCampaignUpdate.build("4999941439445228797")
-    _ = campaign_body.set_state(SPGlobalUpdateState.PAUSED)
+    campaign_body = SPGlobalCampaignUpdate.build("4999919260891723604")
+    # _ = campaign_body.set_state(SPGlobalUpdateState.PAUSED)
+    _ = campaign_body.set_marketplace_configuration("DE", state=SPGlobalState.PAUSED)
     res = await api.update([campaign_body])
     inspect(res.unwrap())
