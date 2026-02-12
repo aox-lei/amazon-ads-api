@@ -416,6 +416,22 @@ class SPCampaignUpdate(CamelCaseBaseModel):
     def build(cls, campaign_id: str, name: Optional[str] = None):
         return cls(campaign_id=campaign_id, name=name)
 
+    def set_start_datetime(self, start_datetime: datetime):
+        self.start_datetime = start_datetime
+        return self
+
+    def set_budget(self, budget_value: float):
+        self.budgets = [
+            SPCreateBudget(
+                budget_value=SPCreateBudgetValue(
+                    monetary_budget_value=SPCreateMonetaryBudgetValue(
+                        monetary_budget=SPCreateMonetaryBudget(value=budget_value)
+                    )
+                )
+            )
+        ]
+        return self
+
     def set_end_datetime(self, end_datetime: datetime):
         self.end_datetime = end_datetime
         return self

@@ -39,7 +39,7 @@ async def test_create(credentials: Credentials, account_id: str):
 async def test_update(credentials: Credentials, account_id: str):
     ads_client = create_ads_client(Region.EU, credentials)
     api = AdGroupsGlobalApi(ads_client, account_id)
-    ad_group = SPGlobalAdGroupUpdate.build(ad_group_id="5000070297893591358")
+    ad_group = SPGlobalAdGroupUpdate.build(ad_group_id="4999865406785808299")
     _ = ad_group.set_state(SPGlobalUpdateState.PAUSED)
     res = await api.update([ad_group])
     inspect(res.unwrap())
