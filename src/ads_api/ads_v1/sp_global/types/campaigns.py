@@ -1,5 +1,6 @@
 from datetime import datetime, timezone
 from typing import Optional
+import pendulum
 import pydantic
 from typing_extensions import Literal
 from ads_api.base import CamelCaseBaseModel
@@ -125,6 +126,8 @@ class SPGlobalCreateAutoCreationSettings(CamelCaseBaseModel):
 # region SPGlobalCampaign
 class SPGlobalCampaignOptimizations(CamelCaseBaseModel):
     bid_settings: Optional[SPGlobalBidSettings] = None
+
+
 class SPGlobalMarketplaceCampaignFieldOverrides(CamelCaseBaseModel):
     end_datetime: Optional[datetime] = pydantic.Field(default=None, alias="endDateTime")
     name: Optional[str] = None
@@ -348,6 +351,16 @@ class SPGlobalCampaignUpdate(CamelCaseBaseModel):
     )
     state: Optional[SPGlobalUpdateState] = None
     tags: Optional[list[SPGlobalCreateTag]] = pydantic.Field(default=None, max_items=50)
+
+    class Config:  # type:ignore
+        # 开启赋值验证
+        validate_assignment = True
+
+    @pydantic.validator("start_datetime", "end_datetime", always=True)  # type:ignore
+    def validate_datetime(cls, v: Optional[datetime] = None):
+        if v is None:
+            return None
+        return pendulum.instance(v).format("YYYY-MM-DDTHH:mm:ss[Z]")
 
     @classmethod
     def build(cls, campaign_id: str):
