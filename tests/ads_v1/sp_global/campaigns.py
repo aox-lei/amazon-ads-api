@@ -1,3 +1,4 @@
+import pendulum
 import pytest
 
 from ads_api.ads_v1.sp_global.campaigns import (
@@ -59,6 +60,8 @@ async def test_update(credentials: Credentials, account_id: str):
 
     campaign_body = SPGlobalCampaignUpdate.build("4999919260891723604")
     # _ = campaign_body.set_state(SPGlobalUpdateState.PAUSED)
-    _ = campaign_body.set_marketplace_configuration("DE", state=SPGlobalState.PAUSED)
+    _ = campaign_body.set_marketplace_configuration(
+        "DE", state=SPGlobalState.PAUSED, start_datetime=pendulum.now()
+    )
     res = await api.update([campaign_body])
     inspect(res.unwrap())

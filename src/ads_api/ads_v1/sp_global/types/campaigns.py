@@ -197,6 +197,16 @@ class SPGlobalCreateMarketplaceCampaignFieldOverrides(CamelCaseBaseModel):
     state: Optional[SPGlobalState]
     tags: Optional[list[SPGlobalCreateTag]] = pydantic.Field(default=None, max_items=50)
 
+    class Config:  # type:ignore
+        # 开启赋值验证
+        validate_assignment = True
+
+    @pydantic.validator("start_datetime", "end_datetime", always=True)  # type:ignore
+    def validate_datetime(cls, v: Optional[datetime] = None):
+        if v is None:
+            return None
+        return pendulum.instance(v).format("YYYY-MM-DDTHH:mm:ss[Z]")
+
 
 class SPGlobalCreateMarketplaceCampaignConfigurations(CamelCaseBaseModel):
     marketplace: SPGlobalMarketplace
