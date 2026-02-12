@@ -298,8 +298,10 @@ class SPCampaignCreate(CamelCaseBaseModel):
     state: SPCreateState = SPCreateState.ENABLED
     tags: Optional[list[SPCreateTag]] = None
 
-    @pydantic.validator("start_datetime", always=True)  # type:ignore
-    def validate_starttime(cls, v: datetime):
+    @pydantic.validator("start_datetime", "end_datetime", always=True)  # type:ignore
+    def validate_starttime(cls, v: Optional[datetime] = None):
+        if v is None:
+            return None
         return pendulum.instance(v).format("YYYY-MM-DDTHH:mm:ss[Z]")
 
     @classmethod
@@ -411,6 +413,16 @@ class SPCampaignUpdate(CamelCaseBaseModel):
     )
     state: Optional[SPUpdateState] = None
     tags: Optional[list[SPCreateTag]] = None
+
+    class Config:  # type:ignore
+        # 开启赋值验证
+        validate_assignment = True
+
+    @pydantic.validator("start_datetime", "end_datetime", always=True)  # type:ignore
+    def validate_datetime(cls, v: Optional[datetime] = None):
+        if v is None:
+            return None
+        return pendulum.instance(v).format("YYYY-MM-DDTHH:mm:ss[Z]")
 
     @classmethod
     def build(cls, campaign_id: str, name: Optional[str] = None):

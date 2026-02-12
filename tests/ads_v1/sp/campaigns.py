@@ -18,6 +18,7 @@ from ads_api.ads_v1.sp.types.enums import (
     SPUpdateState,
 )
 from rich import inspect
+import pendulum
 
 
 @pytest.mark.asyncio
@@ -49,8 +50,9 @@ async def test_create(credentials: Credentials):
 @pytest.mark.asyncio
 async def test_update(credentials: Credentials):
     ads_client = create_ads_client(enums.Region.EU, credentials)
-    campaign_update = SPCampaignUpdate.build("188369444709764")
+    campaign_update = SPCampaignUpdate.build("2382176393709")
     _ = campaign_update.set_state(SPUpdateState.PAUSED)
+    _ = campaign_update.set_end_datetime(pendulum.now().add(days=10))
     api = CampaignApi(ads_client, "1349510253315695")
     res = await api.update(campaigns=[campaign_update])
     inspect(res.unwrap())
