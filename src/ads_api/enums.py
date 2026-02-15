@@ -80,6 +80,8 @@ class CurrencyCode(str, Enum):
     AUD = "AUD"  # 澳大利亚元
     JPY = "JPY"  # 日元
     SGD = "SGD"  # 新加坡元
+    ZAR="ZAR"  # 南非兰特
+    
 
 
 # endregion
