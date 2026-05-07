@@ -1,18 +1,20 @@
+import asyncio
+import json
+from datetime import datetime, timezone
 from enum import Enum
 from typing import Optional
-import pytest
-import asyncio
+
 import httpx
-import pydantic
-from ads_api import Region
-from datetime import datetime, timezone
 import pendulum
+import pydantic
+import pytest
 
-class A(str, Enum):
-    US = "US"
-    CA = "CA"
+from ads_api import Region
+from ads_api.ads_v1.sp_global.campaigns import ListGlobalCampaignResponse
 
-@pytest.mark.asyncio
-async def test_test():
-    country_code = "NA"
-    print(A[country_code])
+
+def test_test():
+    with open("1.json", "r") as f:
+        data = json.load(f)
+
+    print(ListGlobalCampaignResponse(**data))

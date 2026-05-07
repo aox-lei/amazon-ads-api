@@ -1,13 +1,13 @@
 from typing import Optional
 
+from ads_api.ads_v1.base import ErrorCode
 from ads_api.base import CamelCaseBaseModel
 
 from .enums import (
-    SPGlobalDeliveryReason,
     SPDeliveryStatus,
-    SPGlobalMarketplace,
+    SPGlobalDeliveryReason,
+    SPGlobalMarketplaceForStatus,
 )
-from ads_api.ads_v1.base import ErrorCode
 
 
 # region 状态
@@ -62,7 +62,7 @@ class ErrorsIndex(CamelCaseBaseModel):
 class SPGlobalStatusMarketplaceSetting(CamelCaseBaseModel):
     delivery_reason: Optional[list[SPGlobalDeliveryReason]] = None
     delivery_status: SPDeliveryStatus
-    marketplace: SPGlobalMarketplace
+    marketplace: SPGlobalMarketplaceForStatus
 
 
 class SPGlobalStatus(CamelCaseBaseModel):
