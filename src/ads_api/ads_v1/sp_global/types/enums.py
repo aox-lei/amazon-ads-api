@@ -69,6 +69,7 @@ class SPGlobalCountryCode(str, Enum):
     EG = "EG"
     ES = "ES"
     FR = "FR"
+    UK = "GB"
     GB = "GB"
     IN = "IN"
     IT = "IT"
